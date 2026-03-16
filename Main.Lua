@@ -2,7 +2,7 @@ local player = game.Players.LocalPlayer
 local hwid = game:GetService("RbxAnalyticsService"):GetClientId()
 
 local whitelist = {
-    ["ใส่-ID-เครื่อง-ของคุณเอง"] = "SigmaMon821_OWNER", 
+    ["fe4b49cf-739c-4880-bd1b-967f53535bde"] = "Mon", 
     ["A"] = "Customer_1",
     ["B"] = "Customer_2",
     ["C"] = "Customer_2",
