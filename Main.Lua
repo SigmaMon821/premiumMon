@@ -1,13 +1,38 @@
 -- [[ MonPhopuakMung HUB - PAID VERSION ]] --
 
-local statusURL = "https://gist.githubusercontent.com/samsung119980000-boop/6db0bee911261ffc68f668fb7934a692/raw/status.txt"
-local success, currentStatus = pcall(function() return game:HttpGet(statusURL) end)
+local player = game.Players.LocalPlayer
+local hwid = game:GetService("RbxAnalyticsService"):GetClientId()
 
-if success and currentStatus:find("OFF") then
-    return 
+-- [[  ระบบฐานข้อมูล WHITELIST ]] --
+local whitelist = {
+    -- [ ใส่ ID เครื่องที่นี่ ]          = [ ชื่อลูกค้า ],
+    ["ใส่-ID-เครื่อง-ของคุณเอง"]     = "SigmaMon821_OWNER", 
+    ["A"]                      = "Customer_1",
+    ["B"]                      = "Customer_2",
+    ["C"]                      = "Customer_3",
+}
+
+-- [[  ตรวจ ]] --
+if not whitelist[hwid] then
+    player:Kick([[
+⚠️ ระบบรักษาความปลอดภัย ⚠️
+
+ขออภัย... เครื่องของคุณไม่ได้รับอนุญาตให้เข้าใช้งาน
+[!] เหตุผล: ไม่พบรหัส HWID ในฐานข้อมูลลูกค้า (Paid Version)
+
+🔑 รหัสเครื่องของคุณ (ส่งให้คนขาย):
+]] .. hwid .. [[
+
+--------------------------------------
+🛒 สนใจสั่งซื้อทัก
+FB : ม่อนพ่อพวกมึง
+Discord : https://discord.gg/b8X6SdShBV
+--------------------------------------
+]])
+    return
 end
 
--- [[ SAFE ZONE GENERATOR ]] --
+-- [[  SAFE ZONE GENERATOR ]] --
 local safePos = CFrame.new(-1957.43555, 890.547974, 3335.74951, -0.999525309, -0.000334050157, -0.0308059342, -9.18123249e-07, 0.999941528, -0.0108132726, 0.0308077447, -0.0108081112, -0.999466896)
 local partName = "SafeZonePlatform"
 
@@ -22,7 +47,7 @@ if not workspace:FindFirstChild(partName) then
     platform.Parent = workspace
 end
 
--- [[ AFK FISHING PLATFORM GENERATOR ]] --
+-- [[  AFK FISHING PLATFORM GENERATOR ]] --
 local afkPlatformName = "AFKFishingPlatform"
 local afkCoords = Vector3.new(-5700.45, 220.97, -14696.02)
 
@@ -43,11 +68,11 @@ if game.CoreGui:FindFirstChild("FluentToggle") then game.CoreGui.FluentToggle:De
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
-local player = Players.LocalPlayer
 
+-- [[ 5. สร้างหน้าต่างเมนู ]] --
 local Window = Fluent:CreateWindow({
     Title = "YT : MonPhopuakMung 2.0",
-    SubTitle = "Paid Version",
+    SubTitle = "Paid Version | VIP: " .. whitelist[hwid],
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 360),
     Acrylic = false, 
@@ -55,6 +80,7 @@ local Window = Fluent:CreateWindow({
     MinimizeKey = Enum.KeyCode.LeftControl
 })
 
+-- ปุ่มสลับเปิดปิดเมนู (Floating Button)
 local ToggleButton = Instance.new("ScreenGui", game.CoreGui)
 ToggleButton.Name = "FluentToggle"
 ToggleButton.ResetOnSpawn = false
@@ -87,7 +113,7 @@ local Tabs = {
     Misc = Window:AddTab({ Title = "Misc", Icon = "settings" })
 }
 
--- [[ 1. HOME & FARMING ]] --
+-- [[  (Auto Click, Auto Sam, etc.) ]] --
 
 local autoClick = false
 Tabs.Main:AddToggle("AutoClick", {Title = "Auto Click", Default = false}):OnChanged(function(v)
@@ -97,9 +123,7 @@ Tabs.Main:AddToggle("AutoClick", {Title = "Auto Click", Default = false}):OnChan
             local char = player.Character
             if char then
                 local tool = char:FindFirstChildOfClass("Tool")
-                if tool then 
-                    tool:Activate()
-                end
+                if tool then tool:Activate() end
             end
             task.wait(0.12)
         end
@@ -107,7 +131,7 @@ Tabs.Main:AddToggle("AutoClick", {Title = "Auto Click", Default = false}):OnChan
 end)
 
 local autoRemoteKill = false
-Tabs.Main:AddToggle("AutoRemoteKill", {Title = "Auto Fram Haki (OP)", Default = false}):OnChanged(function(v)
+Tabs.Main:AddToggle("AutoRemoteKill", {Title = "Auto Farm Haki (OP)", Default = false}):OnChanged(function(v)
     autoRemoteKill = v
     task.spawn(function()
         while autoRemoteKill do
@@ -119,18 +143,13 @@ Tabs.Main:AddToggle("AutoRemoteKill", {Title = "Auto Fram Haki (OP)", Default = 
 end)
 
 local autoSam = false
-Tabs.Main:AddToggle("AutoSam", {Title = "Auto Sam", Default = false}):OnChanged(function(v)
+Tabs.Main:AddToggle("AutoSam", {Title = "Auto Sam (1s)", Default = false}):OnChanged(function(v)
     autoSam = v
     if autoSam then
         task.spawn(function()
             local remote = game:GetService("ReplicatedStorage"):WaitForChild("Connections"):WaitForChild("Claim_Sam")
-            local args = {
-                [1] = "Claim1"
-            }
             while autoSam do
-                pcall(function()
-                    remote:FireServer(unpack(args))
-                end)
+                pcall(function() remote:FireServer("Claim1") end)
                 task.wait(1)
             end
         end)
@@ -145,6 +164,7 @@ local wantedItems = {
     ["Venom Fruit"]=true, ["Magma Fruit"]=true, ["Gas Fruit"]=true, ["Hollow Fruit"]=true, ["Flame Fruit"]=true
 }
 
+-- [[ ESP & PICKUP ]] --
 local itemESP = false
 local function updateItemESP(plr)
     if plr == player or not plr.Character or not plr.Character:FindFirstChild("Head") then return end
@@ -203,10 +223,6 @@ Tabs.Main:AddToggle("AutoPickup", {Title = "Auto Pickup & Return", Default = fal
                             firetouchinterest(hrp, obj.Handle, 0)
                             task.wait(0.1)
                             firetouchinterest(hrp, obj.Handle, 1)
-                            local click = obj.Handle:FindFirstChildOfClass("ClickDetector")
-                            if click then fireclickdetector(click) end
-                            local prompt = obj:FindFirstChildOfClass("ProximityPrompt", true)
-                            if prompt then fireproximityprompt(prompt) end
                             task.wait(0.5)
                         end
                     end
@@ -217,83 +233,25 @@ Tabs.Main:AddToggle("AutoPickup", {Title = "Auto Pickup & Return", Default = fal
     end) end
 end)
 
-Tabs.Main:AddButton({
-    Title = "Auto Fishing Menu",
-    Callback = function()
-        pcall(function()
-            loadstring(game:HttpGet("https://pastebin.com/raw/Fy54yU3P"))()
-        end)
-    end
-})
-
--- [[ 2. TELEPORT SYSTEM ]] --
+-- [[ TELEPORT & PLAYER ]] --
 local tpLocations = {
     ["AFK FISHING"] = CFrame.new(-5700.45, 222.97, -14696.02),
     ["safe"] = safePos * CFrame.new(0, 2, 0),
-    ["Sam (Main)"] = CFrame.new(-1281.53, 215, -1339.01),
-    ["Bob & Crab"] = CFrame.new(25.95, 221, -95.08),
-    ["Cave Diamond (Lvl.40)"] = CFrame.new(-86.44, 213, -894.27),
-    ["Rayleigh Cave"] = CFrame.new(2057.18, 487, -667.79),
-    ["Snow Mountains"] = CFrame.new(6648.43, 415.99, -1460.59),
-    ["Evill Island"] = CFrame.new(-5311.14, 213, -7618.62),
-    ["Pyramid"] = CFrame.new(118.52, 307, 4946.11),
-    ["Vokun Island"] = CFrame.new(4573.06, 214, 5055.81),
-    ["Club"] = CFrame.new(1509.47, 257.38, 2165.49),
-    ["Desert"] = CFrame.new(1078.03, 242.2, -3333.11),
-    ["Forest"] = CFrame.new(-6042.84, 399, -10.66),
-    ["Fish Spot"] = CFrame.new(1767.62, 215, 814.59)
+    ["Sam (Main)"] = CFrame.new(-1281.53, 215, -1339.01)
 }
 
 for name, cf in pairs(tpLocations) do
-    Tabs.Teleport:AddButton({
-        Title = "Teleport to " .. name,
-        Callback = function()
-            if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-                player.Character.HumanoidRootPart.CFrame = cf
-            end
+    Tabs.Teleport:AddButton({Title = "Teleport to " .. name, Callback = function()
+        if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            player.Character.HumanoidRootPart.CFrame = cf
         end
-    })
+    end})
 end
 
--- [[ 3. PLAYER TELEPORT ]] --
-local selectedPlr = nil
-local function getPlrs()
-    local t = {}
-    for _,p in pairs(game.Players:GetPlayers()) do if p ~= player then table.insert(t, p.Name) end end
-    if #t == 0 then table.insert(t, "No other players") end
-    return t
-end
-local PDrop = Tabs.Player:AddDropdown("PlayerSelector", {Title = "Select Target Player", Values = getPlrs(), Callback = function(v) selectedPlr = v end})
-Tabs.Player:AddButton({Title = "Refresh Player List", Callback = function() PDrop:SetValues(getPlrs()) end})
-Tabs.Player:AddButton({Title = "Teleport to Player", Callback = function()
-    local target = game.Players:FindFirstChild(selectedPlr)
-    if target and target.Character then player.Character.HumanoidRootPart.CFrame = target.Character.HumanoidRootPart.CFrame end
-end})
-
--- [[ 4. MISC SYSTEM ]] --
-Tabs.Misc:AddParagraph({ Title = "Character Mods", Content = "ปรับแต่งตัวละครและการเคลื่อนไหว" })
-local noclip = false
-RunService.Stepped:Connect(function()
-    if noclip and player.Character then
-        for _, v in pairs(player.Character:GetDescendants()) do if v:IsA("BasePart") then v.CanCollide = false end end
-    end
-end)
-Tabs.Misc:AddToggle("NC", {Title = "Noclip", Default = false}):OnChanged(function(v) noclip = v end)
-
-local infJump = false
-game:GetService("UserInputService").JumpRequest:Connect(function()
-    if infJump and player.Character then player.Character.Humanoid:ChangeState("Jumping") end
-end)
-Tabs.Misc:AddToggle("IJ", {Title = "Infinite Jump", Default = false}):OnChanged(function(v) infJump = v end)
-
-Tabs.Misc:AddButton({
-    Title = "Drop Item",
-    Callback = function()
-        if player.Character and player.Character:FindFirstChildOfClass("Tool") then
-            player.Character:FindFirstChildOfClass("Tool").Parent = workspace
-        end
-    end
-})
-
+-- [[ แจ้งเตือนเมื่อเข้าสู่ระบบสำเร็จ ]] --
 Window:SelectTab(1)
-Fluent:Notify({Title = "MonPhopuakMung HUB", Content = "Loaded Paid Version Successfully!", Duration = 5})
+Fluent:Notify({
+    Title = "Mon ver.Paid",
+    Content = "ยินดีต้อนรับครับเสี่ย " .. whitelist[hwid] .. " (เข้าสู่ระบบแล้ว)",
+    Duration = 5
+})
