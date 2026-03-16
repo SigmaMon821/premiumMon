@@ -121,7 +121,7 @@ Tabs.Main:AddToggle("AutoRemoteKill", {Title = "Auto Farm Haki (OP)", Default = 
 end)
 
 local autoSam = false
-Tabs.Main:AddToggle("AutoSam", {Title = "Auto Sam (3s)", Default = false}):OnChanged(function(v)
+Tabs.Main:AddToggle("AutoSam", {Title = "Auto Sam", Default = false}):OnChanged(function(v)
     autoSam = v
     if autoSam then
         task.spawn(function()
