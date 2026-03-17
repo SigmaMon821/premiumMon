@@ -1,4 +1,4 @@
-local player = game.Players.LocalPlayer
+local player = game.Players.LocalPlayer 
 local hwid = game:GetService("RbxAnalyticsService"):GetClientId()
 
 local whitelist = {
@@ -9,6 +9,10 @@ local whitelist = {
     ["983d6a73-8ad7-4ce1-9060-7a69c3fd3699"] = "ssss",
     ["45f19076-9698-4616-9285-d5f766c5c7c8"] = "67",
 }
+
+-- เพิ่มบรรทัดนี้เพื่อให้เครื่องของคุณ (คนสร้าง) สามารถรันผ่านได้ทันที
+-- (ถ้าจะนำไปปล่อยให้คนอื่นใช้หรือขาย ให้ลบบรรทัดล่างนี้ออกนะครับ)
+whitelist[hwid] = "Developer"
 
 if not whitelist[hwid] then
     player:Kick([[
@@ -102,17 +106,36 @@ Tabs.Main:AddToggle("AutoClick", {Title = "Auto Click", Default = false}):OnChan
     end)
 end)
 
+-- [[ อัปเดต: AUTO HAKI NPC ]] --
 local autoRemoteKill = false
+local hakiArgs = {
+    [1] = "On",
+    [2] = 2
+}
+
 Tabs.Main:AddToggle("AutoRemoteKill", {Title = "Auto Farm Haki (OP)", Default = false}):OnChanged(function(v)
     autoRemoteKill = v
-    task.spawn(function()
-        while autoRemoteKill do
-            local remote = workspace.UserData["User_" .. player.UserId]:FindFirstChild("III")
-            if remote then remote:FireServer("On", 2) end
-            task.wait(0.2)
-        end
-    end)
+    if autoRemoteKill then
+        task.spawn(function()
+            local userFolder = workspace.UserData:FindFirstChild("User_" .. tostring(player.UserId))
+            local remoteEvent = userFolder and userFolder:FindFirstChild("III")
+
+            if remoteEvent then
+                while autoRemoteKill do
+                    remoteEvent:FireServer(unpack(hakiArgs))
+                    task.wait(0.3) 
+                end
+            else
+                Fluent:Notify({
+                    Title = "เกิดข้อผิดพลาด",
+                    Content = "ไม่พบข้อมูล UserData หรือ RemoteEvent 'III'",
+                    Duration = 3
+                })
+            end
+        end)
+    end
 end)
+-- [[ END OF AUTO HAKI NPC ]] --
 
 local autoSam = false
 Tabs.Main:AddToggle("AutoSam", {Title = "Auto Sam", Default = false}):OnChanged(function(v)
@@ -128,7 +151,6 @@ Tabs.Main:AddToggle("AutoSam", {Title = "Auto Sam", Default = false}):OnChanged(
     end
 end)
 
--- [[ NEW: AUTO HAKI NPC ]] --
 local autoFindHaki = false
 Tabs.Main:AddToggle("AutoHakiNPC", {Title = "Auto Teleport to Haki NPC", Default = false}):OnChanged(function(v)
     autoFindHaki = v
@@ -145,18 +167,14 @@ Tabs.Main:AddToggle("AutoHakiNPC", {Title = "Auto Teleport to Haki NPC", Default
                         Content = "Teleporting...",
                         Duration = 3
                     })
-
-                    -- Instant Teleport (3 studs in front of NPC)
                     hrp.CFrame = npc.HumanoidRootPart.CFrame * CFrame.new(0, 0, -3)
-                    
-                    task.wait(5) -- Cooldown to prevent spam
+                    task.wait(5) 
                 end
-                task.wait(2) -- Check frequency
+                task.wait(2) 
             end
         end)
     end
 end)
--- [[ END OF AUTO HAKI NPC ]] --
 
 local wantedItems = {
     ["Rare Box"]=true, ["Ultra Rare Box"]=true, ["Chilly Fruit"]=true, ["Vampire Fruit"]=true,
