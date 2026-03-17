@@ -217,6 +217,75 @@ Tabs.Main:AddToggle("AutoPickup", {Title = "Auto Pickup & Return", Default = fal
     end) end
 end)
 
+local autoSmelt = false
+local smeltThread = nil
+local smeltNoclipConn = nil
+local smeltTargetCF = CFrame.new(2211.09253, 215.999985, -632.645752, 0.0397137627, -5.25412389e-08, 0.999211073, 3.48971376e-08, 1, 5.11957303e-08, -0.999211073, 3.28364322e-08, 0.0397137627)
+
+local function enableSmeltNoclip()
+    if smeltNoclipConn then return end
+    smeltNoclipConn = RunService.Stepped:Connect(function()
+        local char = player.Character
+        if char then
+            for _, part in pairs(char:GetDescendants()) do
+                if part:IsA("BasePart") and part.CanCollide then
+                    part.CanCollide = false
+                end
+            end
+        end
+    end)
+end
+
+local function disableSmeltNoclip()
+    if smeltNoclipConn then
+        smeltNoclipConn:Disconnect()
+        smeltNoclipConn = nil
+    end
+end
+
+local function startSmeltLoop()
+    if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+        player.Character.HumanoidRootPart.CFrame = smeltTargetCF
+        task.wait(0.5) 
+    end
+
+    while autoSmelt do
+        pcall(function()
+            local char = player.Character
+            if char and char:FindFirstChild("Powers") and char.Powers:FindFirstChild("Smelt") then
+                local remote = char.Powers.Smelt:FindFirstChild("RemoteEvent")
+                
+                local targetStone = workspace:FindFirstChild("IslandMountain") 
+                                    and workspace.IslandMountain:FindFirstChild("Stone") 
+                                    and workspace.IslandMountain.Stone:FindFirstChild("Stone")
+
+                if remote and targetStone then
+                    local args = {
+                        [1] = "SmeltPower3",
+                        [2] = "Attempt",
+                        [3] = CFrame.new(2207, 217.17845153808594, -632.6077880859375) * CFrame.Angles(-2.142265796661377, 1.2162753343582153, 2.1718497276306152),
+                        [4] = targetStone
+                    }
+                    remote:FireServer(unpack(args))
+                end
+            end
+        end)
+        task.wait(3) 
+    end
+end
+
+Tabs.Main:AddToggle("AutoSmelt", {Title = "Auto Smelt", Default = false}):OnChanged(function(v)
+    autoSmelt = v
+    if autoSmelt then
+        enableSmeltNoclip()
+        if smeltThread then task.cancel(smeltThread) end
+        smeltThread = task.spawn(startSmeltLoop)
+    else
+        disableSmeltNoclip()
+        if smeltThread then task.cancel(smeltThread) end
+    end
+end)
+
 Tabs.Main:AddButton({
     Title = "Auto Fishing Menu",
     Callback = function()
