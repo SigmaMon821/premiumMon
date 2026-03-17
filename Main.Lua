@@ -21,19 +21,7 @@ if not whitelist[hwid] then
     return 
 end
 
-local safePos = CFrame.new(-1957.43555, 890.547974, 3335.74951, -0.999525309, -0.000334050157, -0.0308059342, -9.18123249e-07, 0.999941528, -0.0108132726, 0.0308077447, -0.0108081112, -0.999466896)
-local partName = "SafeZonePlatform"
-
-if not workspace:FindFirstChild(partName) then
-    local platform = Instance.new("Part")
-    platform.Name = partName
-    platform.Size = Vector3.new(300, 1, 300)
-    platform.CFrame = safePos
-    platform.Anchored = true
-    platform.Transparency = 0.5
-    platform.BrickColor = BrickColor.new("Bright blue")
-    platform.Parent = workspace
-end
+local safePos = CFrame.new(-6.88, 200004.47, 194.75)
 
 local afkPlatformName = "AFKFishingPlatform"
 local afkCoords = Vector3.new(-5700.45, 220.97, -14696.02)
@@ -55,6 +43,7 @@ if game.CoreGui:FindFirstChild("FluentToggle") then game.CoreGui.FluentToggle:De
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
+local TeleportService = game:GetService("TeleportService")
 
 local Window = Fluent:CreateWindow({
     Title = "YT : MonPhopuakMung 2.0",
@@ -92,8 +81,11 @@ local Tabs = {
     Main = Window:AddTab({ Title = "Home", Icon = "home" }),
     Teleport = Window:AddTab({ Title = "Teleport", Icon = "map-pin" }),
     Player = Window:AddTab({ Title = "Player", Icon = "user" }),
-    Misc = Window:AddTab({ Title = "Misc", Icon = "settings" })
+    Misc = Window:AddTab({ Title = "Misc", Icon = "settings" }),
+    Server = Window:AddTab({ Title = "Server", Icon = "globe" })
 }
+
+-- [[ MAIN TAB: AUTO FEATURES ]] --
 
 local autoClick = false
 Tabs.Main:AddToggle("AutoClick", {Title = "Auto Click", Default = false}):OnChanged(function(v)
@@ -135,6 +127,36 @@ Tabs.Main:AddToggle("AutoSam", {Title = "Auto Sam", Default = false}):OnChanged(
         end)
     end
 end)
+
+-- [[ NEW: AUTO HAKI NPC ]] --
+local autoFindHaki = false
+Tabs.Main:AddToggle("AutoHakiNPC", {Title = "Auto Teleport to Haki NPC", Default = false}):OnChanged(function(v)
+    autoFindHaki = v
+    if autoFindHaki then
+        task.spawn(function()
+            while autoFindHaki do
+                local npc = workspace:FindFirstChild("QuestHakiMerchant", true)
+                local char = player.Character
+                local hrp = char and char:FindFirstChild("HumanoidRootPart")
+
+                if npc and npc:FindFirstChild("HumanoidRootPart") and hrp then
+                    Fluent:Notify({
+                        Title = "Haki Merchant Found!",
+                        Content = "Teleporting...",
+                        Duration = 3
+                    })
+
+                    -- Instant Teleport (3 studs in front of NPC)
+                    hrp.CFrame = npc.HumanoidRootPart.CFrame * CFrame.new(0, 0, -3)
+                    
+                    task.wait(5) -- Cooldown to prevent spam
+                end
+                task.wait(2) -- Check frequency
+            end
+        end)
+    end
+end)
+-- [[ END OF AUTO HAKI NPC ]] --
 
 local wantedItems = {
     ["Rare Box"]=true, ["Ultra Rare Box"]=true, ["Chilly Fruit"]=true, ["Vampire Fruit"]=true,
@@ -242,7 +264,7 @@ Tabs.Main:AddButton({
 
 local tpLocations = {
     ["AFK FISHING"] = CFrame.new(-5700.45, 222.97, -14696.02),
-    ["safe"] = safePos * CFrame.new(0, 2, 0),
+    ["Castle"] = safePos * CFrame.new(0, 2, 0),
     ["Sam (Main)"] = CFrame.new(-1281.53, 215, -1339.01),
     ["Bob & Crab"] = CFrame.new(25.95, 221, -95.08),
     ["Cave Diamond (Lvl.40)"] = CFrame.new(-86.44, 213, -894.27),
@@ -255,7 +277,7 @@ local tpLocations = {
     ["Desert"] = CFrame.new(1078.03, 242.2, -3333.11),
     ["Forest"] = CFrame.new(-6042.84, 399, -10.66),
     ["Fish Spot"] = CFrame.new(1767.62, 215, 814.59),
-    ["Waypoint1"] = CFrame.new(-1700.5365, 215.999985, -328.792603, -0.801688135, 1.01198889e-08, -0.597742558, -7.09675385e-09, 1, 2.6448296e-08, 0.597742558, 2.5445317e-08, -0.801688135)
+    ["Merlin"] = CFrame.new(-1700.5365, 215.999985, -328.792603, -0.801688135, 1.01198889e-08, -0.597742558, -7.09675385e-09, 1, 2.6448296e-08, 0.597742558, 2.5445317e-08, -0.801688135)
 }
 
 for name, cf in pairs(tpLocations) do
@@ -335,6 +357,46 @@ Tabs.Misc:AddButton({
     Callback = function()
         if player.Character and player.Character:FindFirstChildOfClass("Tool") then
             player.Character:FindFirstChildOfClass("Tool").Parent = workspace
+        end
+    end
+})
+
+Tabs.Server:AddParagraph({ Title = "Server Management", Content = "Current Job ID:\n" .. tostring(game.JobId) })
+
+Tabs.Server:AddButton({
+    Title = "Copy Current Job ID",
+    Callback = function()
+        if setclipboard then
+            setclipboard(tostring(game.JobId))
+            Fluent:Notify({Title = "Copied!", Content = "Job ID copied to clipboard.", Duration = 3})
+        else
+            Fluent:Notify({Title = "Error", Content = "Executor doesn't support setclipboard.", Duration = 3})
+        end
+    end
+})
+
+local targetJobId = ""
+Tabs.Server:AddInput("InputJobId", {
+    Title = "Enter Job ID",
+    Default = "",
+    Placeholder = "Paste Job ID here...",
+    Numeric = false,
+    Finished = false,
+    Callback = function(Value)
+        targetJobId = Value
+    end
+})
+
+Tabs.Server:AddButton({
+    Title = "Join Server",
+    Callback = function()
+        if targetJobId ~= "" then
+            Fluent:Notify({Title = "Teleporting...", Content = "Joining target server.", Duration = 5})
+            pcall(function()
+                TeleportService:TeleportToPlaceInstance(game.PlaceId, targetJobId, player)
+            end)
+        else
+            Fluent:Notify({Title = "Error", Content = "Please enter a Job ID first.", Duration = 3})
         end
     end
 })
