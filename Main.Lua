@@ -6,7 +6,7 @@ local whitelist = {
     ["2e976346-8ea2-40b4-8e88-a8700bf36fcc"] = "T!ne",
     ["0957ba2e-83d7-4510-afdf-c7978e10db6c"] = "TEE",
     ["7a1aaac1-eafb-4d3a-856b-c233dcdbdf42"] = "TEE2",
-    ["-"] = "-",
+    ["983d6a73-8ad7-4ce1-9060-7a69c3fd3699"] = "ssss",
 }
 
 if not whitelist[hwid] then
