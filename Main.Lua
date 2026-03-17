@@ -3,7 +3,7 @@ local hwid = game:GetService("RbxAnalyticsService"):GetClientId()
 
 local whitelist = {
     ["fe4b49cf-739c-4880-bd1b-967f53535bde"] = "Mon", 
-    ["A"] = "Customer_1",
+    ["2e976346-8ea2-40b4-8e88-a8700bf36fcc"] = "T!ne",
     ["B"] = "Customer_2",
     ["C"] = "Customer_2",
 }
