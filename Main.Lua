@@ -8,7 +8,6 @@ local whitelist = {
     ["7a1aaac1-eafb-4d3a-856b-c233dcdbdf42"] = "TEE2",
     ["983d6a73-8ad7-4ce1-9060-7a69c3fd3699"] = "ssss",
     ["45f19076-9698-4616-9285-d5f766c5c7c8"] = "67",
-
 }
 
 if not whitelist[hwid] then
@@ -255,7 +254,8 @@ local tpLocations = {
     ["Club"] = CFrame.new(1509.47, 257.38, 2165.49),
     ["Desert"] = CFrame.new(1078.03, 242.2, -3333.11),
     ["Forest"] = CFrame.new(-6042.84, 399, -10.66),
-    ["Fish Spot"] = CFrame.new(1767.62, 215, 814.59)
+    ["Fish Spot"] = CFrame.new(1767.62, 215, 814.59),
+    ["Waypoint1"] = CFrame.new(-1700.5365, 215.999985, -328.792603, -0.801688135, 1.01198889e-08, -0.597742558, -7.09675385e-09, 1, 2.6448296e-08, 0.597742558, 2.5445317e-08, -0.801688135)
 }
 
 for name, cf in pairs(tpLocations) do
@@ -308,6 +308,27 @@ game:GetService("UserInputService").JumpRequest:Connect(function()
     if infJump and player.Character then player.Character.Humanoid:ChangeState("Jumping") end
 end)
 Tabs.Misc:AddToggle("IJ", {Title = "Infinite Jump", Default = false}):OnChanged(function(v) infJump = v end)
+
+local VirtualUser = game:GetService("VirtualUser")
+local antiAfk = false
+local afkConnection = nil
+
+Tabs.Misc:AddToggle("AntiAFK", {Title = "Anti AFK", Default = false}):OnChanged(function(v)
+    antiAfk = v
+    if antiAfk then
+        if not afkConnection then
+            afkConnection = player.Idled:Connect(function()
+                VirtualUser:CaptureController()
+                VirtualUser:ClickButton2(Vector2.new())
+            end)
+        end
+    else
+        if afkConnection then
+            afkConnection:Disconnect()
+            afkConnection = nil
+        end
+    end
+end)
 
 Tabs.Misc:AddButton({
     Title = "Drop Item",
