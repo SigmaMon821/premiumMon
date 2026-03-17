@@ -221,27 +221,21 @@ end)
 Tabs.Main:AddButton({
     Title = "Auto Smelt",
     Callback = function()
-        pcall(function()
-            loadstring(game:HttpGet("https://pastebin.com/raw/6yBSTgmm"))()
-        end)
+        pcall(function() loadstring(game:HttpGet("https://pastebin.com/raw/6yBSTgmm"))() end)
     end
 })
 
 Tabs.Main:AddButton({
     Title = "Auto Fish MB",
     Callback = function()
-        pcall(function()
-            loadstring(game:HttpGet("https://pastebin.com/raw/Fy54yU3P"))()
-        end)
+        pcall(function() loadstring(game:HttpGet("https://pastebin.com/raw/Fy54yU3P"))() end)
     end
 })
 
 Tabs.Main:AddButton({
     Title = "Auto Fish PC",
     Callback = function()
-        pcall(function()
-            loadstring(game:HttpGet("https://pastebin.com/raw/Vx68tpY4"))()
-        end)
+        pcall(function() loadstring(game:HttpGet("https://pastebin.com/raw/Vx68tpY4"))() end)
     end
 })
 
@@ -277,9 +271,8 @@ end
 local selectedPlr = nil
 local function getPlrs()
     local t = {}
-    local lp = game:GetService("Players").LocalPlayer
     for _,p in pairs(game:GetService("Players"):GetPlayers()) do 
-        if p ~= lp then table.insert(t, p.Name) end 
+        if p ~= player then table.insert(t, p.Name) end 
     end
     if #t == 0 then table.insert(t, "No other players") end
     return t
@@ -292,81 +285,9 @@ Tabs.Player:AddButton({Title = "Refresh Player List", Callback = function() PDro
 Tabs.Player:AddButton({
     Title = "Teleport to Player", 
     Callback = function()
-        local lp = game:GetService("Players").LocalPlayer
         local target = game:GetService("Players"):FindFirstChild(selectedPlr)
-        if lp and lp.Character and lp.Character:FindFirstChild("HumanoidRootPart") and target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then 
-            lp.Character.HumanoidRootPart.CFrame = target.Character.HumanoidRootPart.CFrame 
-        end
-    end
-})
-
-Tabs.Misc:AddParagraph({ Title = "Character Mods", Content = "ปรับแต่งตัวละครและการเคลื่อนไหว" })
-local noclip = false
-RunService.Stepped:Connect(function()
-    if noclip and player.Character then
-        for _, v in pairs(player.Character:GetDescendants()) do if v:IsA("BasePart") then v.CanCollide = false end end
-    end
-end)
-Tabs.Misc:AddToggle("NC", {Title = "Noclip", Default = false}):OnChanged(function(v) noclip = v end)
-
-local infJump = false
-game:GetService("UserInputService").JumpRequest:Connect(function()
-    if infJump and player.Character then player.Character.Humanoid:ChangeState("Jumping") end
-end)
-Tabs.Misc:AddToggle("IJ", {Title = "Infinite Jump", Default = false}):OnChanged(function(v) infJump = v end)
-
-Tabs.Misc:AddButton({
-    Title = "Drop Item",
-    Callback = function()
-        if player.Character and player.Character:FindFirstChildOfClass("Tool") then
-            player.Character:FindFirstChildOfClass("Tool").Parent = workspace
-        end
-    end
-})
-
-Window:SelectTab(1)
-Fluent:Notify({
-    Title = "Mon ver.Paid",
-    Content = (whitelist[hwid] or "พม่าลักลอบ"),
-    Duration = 5
-})
-767.62, 215, 814.59)
-}
-
-for name, cf in pairs(tpLocations) do
-    Tabs.Teleport:AddButton({
-        Title = "Teleport to " .. name,
-        Callback = function()
-            local lp = game:GetService("Players").LocalPlayer
-            if lp and lp.Character and lp.Character:FindFirstChild("HumanoidRootPart") then
-                lp.Character.HumanoidRootPart.CFrame = cf
-            end
-        end
-    })
-end
-
-local selectedPlr = nil
-local function getPlrs()
-    local t = {}
-    local lp = game:GetService("Players").LocalPlayer
-    for _,p in pairs(game:GetService("Players"):GetPlayers()) do 
-        if p ~= lp then table.insert(t, p.Name) end 
-    end
-    if #t == 0 then table.insert(t, "No other players") end
-    return t
-end
-
-local PDrop = Tabs.Player:AddDropdown("PlayerSelector", {Title = "Select Target Player", Values = getPlrs(), Callback = function(v) selectedPlr = v end})
-
-Tabs.Player:AddButton({Title = "Refresh Player List", Callback = function() PDrop:SetValues(getPlrs()) end})
-
-Tabs.Player:AddButton({
-    Title = "Teleport to Player", 
-    Callback = function()
-        local lp = game:GetService("Players").LocalPlayer
-        local target = game:GetService("Players"):FindFirstChild(selectedPlr)
-        if lp and lp.Character and lp.Character:FindFirstChild("HumanoidRootPart") and target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then 
-            lp.Character.HumanoidRootPart.CFrame = target.Character.HumanoidRootPart.CFrame 
+        if player.Character and player.Character:FindFirstChild("HumanoidRootPart") and target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then 
+            player.Character.HumanoidRootPart.CFrame = target.Character.HumanoidRootPart.CFrame 
         end
     end
 })
