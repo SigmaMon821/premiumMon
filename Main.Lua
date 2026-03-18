@@ -102,7 +102,7 @@ Tabs.Main:AddToggle("AutoClick", {Title = "Auto Click", Default = false}):OnChan
     end)
 end)
 
--- [[ อัปเดต: AUTO HAKI NPC ]] --
+
 local autoRemoteKill = false
 local hakiArgs = {
     [1] = "On",
@@ -131,7 +131,7 @@ Tabs.Main:AddToggle("AutoRemoteKill", {Title = "Auto Farm Haki (OP)", Default = 
         end)
     end
 end)
--- [[ END OF AUTO HAKI NPC ]] --
+
 
 local autoSam = false
 Tabs.Main:AddToggle("AutoSam", {Title = "Auto Sam", Default = false}):OnChanged(function(v)
@@ -305,6 +305,14 @@ for name, cf in pairs(tpLocations) do
         end
     })
 end
+
+-- [[ MERCHANTS TELEPORT SYSTEM  ]] --
+getgenv().Tabs = Tabs
+getgenv().Fluent = Fluent
+pcall(function() 
+    loadstring(game:HttpGet("https://pastebin.com/raw/v7SLRDsm"))() 
+end)
+
 
 local selectedPlr = nil
 local function getPlrs()
