@@ -103,9 +103,6 @@ Tabs.Main:AddToggle("AutoClick", {Title = "Auto Click", Default = false}):OnChan
     end)
 end)
 
--- ==========================================
--- เพิ่มระบบ Auto Package ตรงนี้ (ใต้ Auto Click)
--- ==========================================
 local autoPackage = false
 Tabs.Main:AddToggle("AutoPackage", {Title = "Auto Package", Default = false}):OnChanged(function(v)
     autoPackage = v
