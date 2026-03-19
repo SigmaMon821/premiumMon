@@ -103,10 +103,10 @@ Tabs.Main:AddToggle("AutoClick", {Title = "Auto Click", Default = false}):OnChan
     end)
 end)
 
-local autoPackage = false
 Tabs.Main:AddToggle("AutoPackage", {Title = "Auto Package", Default = false}):OnChanged(function(v)
-    autoPackage = v
-    if autoPackage then
+    _G.AutoPackage = v
+    if v then
+        -- โหลดสคริปต์แค่ครั้งเดียว สคริปต์ใน Pastebin จะเช็คค่า _G.AutoPackage เอง
         pcall(function()
             loadstring(game:HttpGet("https://pastebin.com/raw/mz25jTgu"))()
         end)
