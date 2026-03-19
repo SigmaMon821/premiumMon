@@ -25,7 +25,7 @@ end
 local safePos = CFrame.new(-6.88, 200004.47, 194.75)
 
 local afkPlatformName = "AFKFishingPlatform"
-local afkCoords = Vector3.new(-5700.45, 217.97, -14696.02)
+local afkCoords = Vector3.new(-5700.45, 216.97, -14696.02)
 
 if not workspace:FindFirstChild(afkPlatformName) then
     local afkFloor = Instance.new("Part")
