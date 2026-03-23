@@ -107,7 +107,7 @@ Tabs.Main:AddToggle("AutoRemoteKill", {Title = "Auto Farm Haki (OP)", Default = 
             if remoteEvent then
                 while autoRemoteKill do
                     remoteEvent:FireServer(unpack(hakiArgs))
-                    task.wait(0.45) 
+                    task.wait(0.55) 
                 end
             else
                 Fluent:Notify({
