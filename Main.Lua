@@ -423,6 +423,6 @@ Tabs.Server:AddButton({
 Window:SelectTab(1)
 Fluent:Notify({
     Title = "Mon ver.Paid",
-    Content = "Welcome! (Bypassed Version)",
+    Content = "Welcome! (Paid Version)",
     Duration = 5
 })
