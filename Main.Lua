@@ -1,4 +1,4 @@
-Versionon player = game.Players.LocalPlayer 
+local player = game.Players.LocalPlayer 
 
 -- ==========================================
 -- Kick When Admin/Mod Join 
