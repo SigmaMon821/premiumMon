@@ -1,4 +1,4 @@
-local player = game.Players.LocalPlayer 
+Versionon player = game.Players.LocalPlayer 
 
 -- ==========================================
 -- Kick When Admin/Mod Join 
@@ -36,7 +36,7 @@ local TeleportService = game:GetService("TeleportService")
 
 local Window = Fluent:CreateWindow({
     Title = "YT : MonPhopuakMung 2.0",
-    SubTitle = "Bypassed Version",
+    SubTitle = "PaidVersion",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 360),
     Acrylic = false, 
