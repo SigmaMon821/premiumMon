@@ -1,30 +1,7 @@
 local player = game.Players.LocalPlayer 
-local hwid = game:GetService("RbxAnalyticsService"):GetClientId()
-
-local whitelist = {
-    ["fe4b49cf-739c-4880-bd1b-967f53535bde"] = "hole", 
-    ["2e976346-8ea2-40b4-8e88-a8700bf36fcc"] = "T!ne",
-    ["0957ba2e-83d7-4510-afdf-c7978e10db6c"] = "TEE",
-    ["7a1aaac1-eafb-4d3a-856b-c233dcdbdf42"] = "TEE2",
-    ["983d6a73-8ad7-4ce1-9060-7a69c3fd3699"] = "ssss",
-    ["45f19076-9698-4616-9285-d5f766c5c7c8"] = "67",
-    ["75208745-717b-4eca-9fe3-13d53b185b51"] = "t1",
-    ["1bde10b9-306e-4bc3-a44c-1270082dbf10"] = "ม่อน",
-}
-
-if not whitelist[hwid] then
-    player:Kick([[
-❌ ไม่พบสิทธิ์การใช้งาน (Paid Version)
-รหัสเครื่องของคุณคือ:
-]] .. hwid .. [[
-
-ติดต่อ FB: ม่อนพ่อพวกมึง
-]])
-    return 
-end
 
 -- ==========================================
--- ระบบเฝ้าระวังอัตโนมัติ 
+-- Kick When Admin/Mod Join 
 -- ==========================================
 task.spawn(function()
     pcall(function()
@@ -59,7 +36,7 @@ local TeleportService = game:GetService("TeleportService")
 
 local Window = Fluent:CreateWindow({
     Title = "YT : MonPhopuakMung 2.0",
-    SubTitle = "Paid Version | VIP: " .. (whitelist[hwid] or "พม่าลักลอบ"),
+    SubTitle = "Bypassed Version",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 360),
     Acrylic = false, 
@@ -446,6 +423,6 @@ Tabs.Server:AddButton({
 Window:SelectTab(1)
 Fluent:Notify({
     Title = "Mon ver.Paid",
-    Content = (whitelist[hwid] or "พม่าลักลอบ"),
+    Content = "Welcome! (Bypassed Version)",
     Duration = 5
 })
