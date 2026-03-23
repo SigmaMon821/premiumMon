@@ -1,15 +1,5 @@
 local player = game.Players.LocalPlayer 
 
--- ==========================================
--- Kick When Admin/Mod Join 
--- ==========================================
-task.spawn(function()
-    pcall(function()
-        loadstring(game:HttpGet("https://pastebin.com/raw/fuDuZziN"))()
-    end)
-end)
--- ==========================================
-
 local safePos = CFrame.new(-6.88, 200004.47, 194.75)
 
 local afkPlatformName = "AFKFishingPlatform"
@@ -121,8 +111,8 @@ Tabs.Main:AddToggle("AutoRemoteKill", {Title = "Auto Farm Haki (OP)", Default = 
                 end
             else
                 Fluent:Notify({
-                    Title = "เกิดข้อผิดพลาด",
-                    Content = "ไม่พบข้อมูล UserData หรือ RemoteEvent 'III'",
+                    Title = "Error",
+                    Content = "UserData or RemoteEvent 'III' not found",
                     Duration = 3
                 })
             end
@@ -200,10 +190,10 @@ local function updateItemESP(plr)
             tag.Name = "ItemESP"; tag.Size = UDim2.new(0, 150, 0, 30); tag.AlwaysOnTop = true; tag.ExtentsOffset = Vector3.new(0, 3, 0)
             local text = Instance.new("TextLabel", tag)
             text.Size = UDim2.new(1,0,1,0); text.BackgroundTransparency = 1; text.TextColor3 = Color3.fromRGB(255, 255, 0); text.TextScaled = true
-            text.Text = "⭐ " .. plr.Name .. " มี: " .. found
+            text.Text = "⭐ " .. plr.Name .. " Has: " .. found
         else
             local text = tag:FindFirstChildOfClass("TextLabel")
-            if text then text.Text = "⭐ " .. plr.Name .. " มี: " .. found end
+            if text then text.Text = "⭐ " .. plr.Name .. " Has: " .. found end
         end
     elseif tag then tag:Destroy() end
 end
@@ -335,7 +325,27 @@ Tabs.Player:AddButton({
     end
 })
 
-Tabs.Misc:AddParagraph({ Title = "Character Mods", Content = "ปรับแต่งตัวละครและการเคลื่อนไหว" })
+Tabs.Misc:AddParagraph({ Title = "Safety & Character Mods", Content = "Character and movement modifications" })
+
+-- [[ ANTI ADMIN TOGGLE ADDED HERE ]] --
+local antiAdminLoaded = false
+Tabs.Misc:AddToggle("AntiAdminToggle", {Title = "Anti Admin/Mod (Kick)", Default = false}):OnChanged(function(v)
+    if v and not antiAdminLoaded then
+        antiAdminLoaded = true
+        task.spawn(function()
+            pcall(function()
+                loadstring(game:HttpGet("https://pastebin.com/raw/fuDuZziN"))()
+            end)
+        end)
+    elseif not v and antiAdminLoaded then
+        Fluent:Notify({
+            Title = "Notice",
+            Content = "Anti Admin script is already loaded and active.",
+            Duration = 3
+        })
+    end
+end)
+
 local noclip = false
 RunService.Stepped:Connect(function()
     if noclip and player.Character then
