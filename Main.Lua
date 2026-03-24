@@ -1,7 +1,6 @@
 local player = game.Players.LocalPlayer 
 
 local hwid = (gethwid and gethwid()) or game:GetService("RbxAnalyticsService"):GetClientId()
-
 local whitelist_url = "https://pastebin.com/raw/VYuKUsTh"
 
 local success, whitelist = pcall(function()
@@ -9,17 +8,13 @@ local success, whitelist = pcall(function()
 end)
 
 if not success or type(whitelist) ~= "table" or not whitelist[hwid] then
-    
     if setclipboard then
         pcall(function() setclipboard(hwid) end)
     end
-
-    -- เตะผู้เล่นและโชว์ข้อความ
     player:Kick("\n❌ ไม่พบสิทธิ์การใช้งาน (Paid Version)\n\n" ..
                 "รหัสเครื่องของคุณคือ:\n" .. hwid .. "\n\n" ..
                 "(ระบบได้คัดลอกรหัสนี้ไว้ให้แล้ว สามารถกดวางในแชทได้เลย)\n\n" ..
                 "ติดต่อ FB: ม่อนพ่อพวกมึง\n")
-    
     return 
 end
 
@@ -28,10 +23,8 @@ local successGui = pcall(function() local _ = TargetGui.Name end)
 if not successGui then
     TargetGui = player:WaitForChild("PlayerGui")
 end
--- ==========================================
 
 local safePos = CFrame.new(-6.88, 200004.47, 194.75)
-
 local afkPlatformName = "AFKFishingPlatform"
 local afkCoords = Vector3.new(-5700.45, 216.97, -14696.02)
 
@@ -61,7 +54,7 @@ local Window = Fluent:CreateWindow({
     Size = UDim2.fromOffset(580, 360),
     Acrylic = false, 
     Theme = "Dark",
-    MinimizeKey = Enum.KeyCode.LeftControl
+    MinimizeKey = Enum.KeyCode.Unknown -- ปิดการใช้ปุ่มคีย์บอร์ดเพื่อเปิด/ปิดเมนู
 })
 
 local ToggleButton = Instance.new("ScreenGui")
@@ -82,17 +75,11 @@ MainButton.Active = true
 local UICorner = Instance.new("UICorner", MainButton)
 UICorner.CornerRadius = UDim.new(0, 12)
 
+-- ใช้การทัช/คลิกที่ปุ่มเพื่อเปิด-ปิดอย่างเดียว
 MainButton.MouseButton1Click:Connect(function()
-    local s = pcall(function() 
-        local v = game:GetService("VirtualInputManager")
-        v:SendKeyEvent(true, Enum.KeyCode.LeftControl, false, game)
-        v:SendKeyEvent(false, Enum.KeyCode.LeftControl, false, game) 
-    end)
-    if not s then 
-        for _, gui in pairs(TargetGui:GetChildren()) do
-            if gui:IsA("ScreenGui") and gui:FindFirstChild("Frame") and gui.Name ~= "FluentToggle" then
-                gui.Enabled = not gui.Enabled
-            end
+    for _, gui in pairs(TargetGui:GetChildren()) do
+        if gui:IsA("ScreenGui") and gui:FindFirstChild("Frame") and gui.Name ~= "FluentToggle" then
+            gui.Enabled = not gui.Enabled
         end
     end
 end)
@@ -104,8 +91,6 @@ local Tabs = {
     Misc = Window:AddTab({ Title = "Misc", Icon = "settings" }),
     Server = Window:AddTab({ Title = "Server", Icon = "globe" })
 }
-
--- [[ MAIN TAB: AUTO FEATURES ]] --
 
 local autoClick = false
 Tabs.Main:AddToggle("AutoClick", {Title = "Auto Click", Default = false}):OnChanged(function(v)
@@ -130,7 +115,6 @@ Tabs.Main:AddToggle("AutoPackage", {Title = "Auto Package", Default = false}):On
         end)
     end
 end)
--- ==========================================
 
 local autoRemoteKill = false
 local hakiArgs = {
@@ -334,7 +318,6 @@ for name, cf in pairs(tpLocations) do
     })
 end
 
--- [[ MERCHANTS TELEPORT SYSTEM  ]] --
 getgenv().Tabs = Tabs
 getgenv().Fluent = Fluent
 pcall(function() 
@@ -365,9 +348,6 @@ Tabs.Player:AddButton({
     end
 })
 
-Tabs.Misc:AddParagraph({ Title = "Safety & Character Mods", Content = "Character and movement modifications" })
-
--- [[ ANTI ADMIN TOGGLE ADDED HERE ]] --
 local antiAdminLoaded = false
 Tabs.Misc:AddToggle("AntiAdminToggle", {Title = "Anti Admin/Mod (Kick)", Default = false}):OnChanged(function(v)
     if v and not antiAdminLoaded then
@@ -429,8 +409,6 @@ Tabs.Misc:AddButton({
         end
     end
 })
-
-Tabs.Server:AddParagraph({ Title = "Server Management", Content = "Current Job ID:\n" .. tostring(game.JobId) })
 
 Tabs.Server:AddButton({
     Title = "Copy Current Job ID",
