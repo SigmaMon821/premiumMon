@@ -11,7 +11,7 @@ local whitelist = {
 
 ["3f27155ca229e3a82122dc9f1ab6d893efd3ffa0a0eaad36033fa451a384fd60"] = "z" ,
 ["73e89e9e2fa3936253aafc35d15a86a4995db350d0507800e4febcadd368ce25"] = "a" ,
-    -- เพิ่มรายชื่อลูกค้าคนใหม่ตรงนี้
+    
 }
 
 if not whitelist[hwid] then
