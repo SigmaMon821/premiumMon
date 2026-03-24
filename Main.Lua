@@ -23,9 +23,6 @@ if not success or type(whitelist) ~= "table" or not whitelist[hwid] then
     return 
 end
 
--- ==========================================
--- [2] ระบบจัดการ UI (แก้บั๊ก CoreGui สำหรับมือถือ)
--- ==========================================
 local TargetGui = (gethui and gethui()) or game:GetService("CoreGui")
 local successGui = pcall(function() local _ = TargetGui.Name end)
 if not successGui then
@@ -86,9 +83,16 @@ local UICorner = Instance.new("UICorner", MainButton)
 UICorner.CornerRadius = UDim.new(0, 12)
 
 MainButton.MouseButton1Click:Connect(function()
-    for _, gui in pairs(TargetGui:GetChildren()) do
-        if gui:IsA("ScreenGui") and gui:FindFirstChild("Frame") and gui.Name ~= "FluentToggle" then
-            gui.Enabled = not gui.Enabled
+    local s = pcall(function() 
+        local v = game:GetService("VirtualInputManager")
+        v:SendKeyEvent(true, Enum.KeyCode.LeftControl, false, game)
+        v:SendKeyEvent(false, Enum.KeyCode.LeftControl, false, game) 
+    end)
+    if not s then 
+        for _, gui in pairs(TargetGui:GetChildren()) do
+            if gui:IsA("ScreenGui") and gui:FindFirstChild("Frame") and gui.Name ~= "FluentToggle" then
+                gui.Enabled = not gui.Enabled
+            end
         end
     end
 end)
@@ -254,7 +258,7 @@ Tabs.Main:AddToggle("AutoPickup", {Title = "Auto Pickup & Return", Default = fal
                 for _,obj in pairs(workspace:GetDescendants()) do
                     if obj:IsA("Tool") and obj:FindFirstChild("Handle") then
                         local isWanted = false
-                        for name, _ in pairs(wantedItems) do if obj.Name:find(name) tตรงไหมWanted = true break end end
+                        for name, _ in pairs(wantedItems) do if obj.Name:find(name) then isWanted = true break end end
                         
                         if obj.Name:find("Compass") then isWanted = true end
 
