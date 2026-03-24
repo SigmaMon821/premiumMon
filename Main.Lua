@@ -52,6 +52,7 @@ local Window = Fluent:CreateWindow({
     MinimizeKey = Enum.KeyCode.LeftControl
 })
 
+
 local ToggleButton = Instance.new("ScreenGui", game.CoreGui)
 ToggleButton.Name = "FluentToggle"
 ToggleButton.ResetOnSpawn = false
