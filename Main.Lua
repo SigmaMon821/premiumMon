@@ -1,5 +1,6 @@
 local player = game.Players.LocalPlayer 
-widocal hwid = (gethwid and gethwid()) or game:GetService("RbxAnalyticsService"):GetClientId()
+
+local hwid = (gethwid and gethwid()) or game:GetService("RbxAnalyticsService"):GetClientId()
 
 local whitelist_url = "https://pastebin.com/raw/VYuKUsTh"
 
@@ -22,6 +23,9 @@ if not success or type(whitelist) ~= "table" or not whitelist[hwid] then
     return 
 end
 
+-- ==========================================
+-- [2] ระบบจัดการ UI (แก้บั๊ก CoreGui สำหรับมือถือ)
+-- ==========================================
 local TargetGui = (gethui and gethui()) or game:GetService("CoreGui")
 local successGui = pcall(function() local _ = TargetGui.Name end)
 if not successGui then
@@ -250,7 +254,7 @@ Tabs.Main:AddToggle("AutoPickup", {Title = "Auto Pickup & Return", Default = fal
                 for _,obj in pairs(workspace:GetDescendants()) do
                     if obj:IsA("Tool") and obj:FindFirstChild("Handle") then
                         local isWanted = false
-                        for name, _ in pairs(wantedItems) do if obj.Name:find(name) then isWanted = true break end end
+                        for name, _ in pairs(wantedItems) do if obj.Name:find(name) tตรงไหมWanted = true break end end
                         
                         if obj.Name:find("Compass") then isWanted = true end
 
@@ -468,5 +472,3 @@ Fluent:Notify({
     Content = "Welcome! (Paid Version)",
     Duration = 5
 })
-   
- 
