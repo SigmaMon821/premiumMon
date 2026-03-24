@@ -18,13 +18,8 @@ if not success or type(whitelist) ~= "table" or not whitelist[hwid] then
     return 
 end
 
-local TargetGui = (gethui and gethui()) or game:GetService("CoreGui")
-local successGui = pcall(function() local _ = TargetGui.Name end)
-if not successGui then
-    TargetGui = player:WaitForChild("PlayerGui")
-end
-
 local safePos = CFrame.new(-6.88, 200004.47, 194.75)
+
 local afkPlatformName = "AFKFishingPlatform"
 local afkCoords = Vector3.new(-5700.45, 216.97, -14696.02)
 
@@ -40,7 +35,7 @@ if not workspace:FindFirstChild(afkPlatformName) then
     afkFloor.Parent = workspace
 end
 
-if TargetGui:FindFirstChild("FluentToggle") then TargetGui.FluentToggle:Destroy() end
+if game.CoreGui:FindFirstChild("FluentToggle") then game.CoreGui.FluentToggle:Destroy() end
 
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local Players = game:GetService("Players")
@@ -54,14 +49,12 @@ local Window = Fluent:CreateWindow({
     Size = UDim2.fromOffset(580, 360),
     Acrylic = false, 
     Theme = "Dark",
-    MinimizeKey = Enum.KeyCode.Unknown -- ปิดการใช้ปุ่มคีย์บอร์ดเพื่อเปิด/ปิดเมนู
+    MinimizeKey = Enum.KeyCode.LeftControl
 })
 
-local ToggleButton = Instance.new("ScreenGui")
+local ToggleButton = Instance.new("ScreenGui", game.CoreGui)
 ToggleButton.Name = "FluentToggle"
 ToggleButton.ResetOnSpawn = false
-ToggleButton.Parent = TargetGui
-
 local MainButton = Instance.new("TextButton", ToggleButton)
 MainButton.Size = UDim2.new(0, 50, 0, 50)
 MainButton.Position = UDim2.new(0.05, 0, 0.15, 0)
@@ -71,13 +64,11 @@ MainButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 MainButton.TextColor3 = Color3.new(1, 1, 1)
 MainButton.Draggable = true
 MainButton.Active = true
-
 local UICorner = Instance.new("UICorner", MainButton)
 UICorner.CornerRadius = UDim.new(0, 12)
 
--- ใช้การทัช/คลิกที่ปุ่มเพื่อเปิด-ปิดอย่างเดียว
 MainButton.MouseButton1Click:Connect(function()
-    for _, gui in pairs(TargetGui:GetChildren()) do
+    for _, gui in pairs(game.CoreGui:GetChildren()) do
         if gui:IsA("ScreenGui") and gui:FindFirstChild("Frame") and gui.Name ~= "FluentToggle" then
             gui.Enabled = not gui.Enabled
         end
