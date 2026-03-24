@@ -1,13 +1,472 @@
-rData:FindFirstChild("User_"   .. tostring(player.UserId) );local remoteEvent=userFolder and userFolder:FindFirstChild("III") ;if remoteEvent then while autoRemoteKill do remoteEvent:FireServer(unpack(hakiArgs));task.wait(0.55);end else Fluent:Notify({Title="Error",Content="UserData or RemoteEvent 'III' not found",Duration=3});end end);end end);local autoSam=false;Tabs.Main:AddToggle("AutoSam",{Title="Auto Sam",Default=false}):OnChanged(function(v) autoSam=v;if autoSam then task.spawn(function() local remote=game:GetService("ReplicatedStorage"):WaitForChild("Connections"):WaitForChild("Claim_Sam");while autoSam do pcall(function() remote:FireServer("Claim1");end);task.wait(3);end end);end end);local autoFindHaki=false;Tabs.Main:AddToggle("AutoHakiNPC",{Title="Auto Teleport to Haki NPC",Default=false}):OnChanged(function(v) autoFindHaki=v;if autoFindHaki then task.spawn(function() while autoFindHaki do local npc=workspace:FindFirstChild("QuestHakiMerchant",true);local char=player.Character;local hrp=char and char:FindFirstChild("HumanoidRootPart") ;if (npc and npc:FindFirstChild("HumanoidRootPart") and hrp) then Fluent:Notify({Title="Haki Merchant Found!",Content="Teleporting...",Duration=3});hrp.CFrame=npc.HumanoidRootPart.CFrame * CFrame.new(0,0, -3) ;task.wait(5);end task.wait(2);end end);end end);local wantedItems={["Rare Box"]=true,["Ultra Rare Box"]=true,["Chilly Fruit"]=true,["Vampire Fruit"]=true,["Sand Fruit"]=true,["Plasma Fruit"]=true,["Snow Fruit"]=true,["Light Fruit"]=true,["Candy Fruit"]=true,["Quake Fruit"]=true,["Blood Fruit"]=true,["Ope Fruit"]=true,["Gum Fruit"]=true,["Dark Fruit"]=true,["Rumble Fruit"]=true,["Gravity Fruit"]=true,["Venom Fruit"]=true,["Magma Fruit"]=true,["Gas Fruit"]=true,["Hollow Fruit"]=true,["Flare Fruit"]=true};local itemESP=false;local function updateItemESP(plr) if ((plr==player) or  not plr.Character or  not plr.Character:FindFirstChild("Head")) then return;end local found=nil;for _,item in pairs(plr.Backpack:GetChildren()) do for name,_ in pairs(wantedItems) do if item.Name:find(name) then found=item.Name;break;end end if found then break;end end if  not found then for _,item in pairs(plr.Character:GetChildren()) do if item:IsA("Tool") then for name,_ in pairs(wantedItems) do if item.Name:find(name) then found=item.Name;break;end end if found then break;end end end end local tag=plr.Character.Head:FindFirstChild("ItemESP");if (itemESP and found) then if  not tag then tag=Instance.new("BillboardGui",plr.Character.Head);tag.Name="ItemESP";tag.Size=UDim2.new(0,150,0,30);tag.AlwaysOnTop=true;tag.ExtentsOffset=Vector3.new(0,3,0);local text=Instance.new("TextLabel",tag);text.Size=UDim2.new(1,0,1,0);text.BackgroundTransparency=1;text.TextColor3=Color3.fromRGB(255,255,0);text.TextScaled=true;text.Text="โญ "   .. plr.Name   .. " Has: "   .. found ;else local text=tag:FindFirstChildOfClass("TextLabel");if text then text.Text="โญ "   .. plr.Name   .. " Has: "   .. found ;end end elseif tag then tag:Destroy();end end Tabs.Main:AddToggle("ItemESP",{Title="Item ESP",Default=false}):OnChanged(function(v) itemESP=v;if v then task.spawn(function() while itemESP do for _,p in pairs(Players:GetPlayers()) do pcall(function() updateItemESP(p);end);end task.wait(2);end end);end end);local autoPickup=false;Tabs.Main:AddToggle("AutoPickup",{Title="Auto Pickup & Return",Default=false}):OnChanged(function(v) autoPickup=v;if v then task.spawn(function() while autoPickup do task.wait(0.5);local char=player.Character;local hrp=char and char:FindFirstChild("HumanoidRootPart") ;if hrp then local originalPos=hrp.CFrame;local collectedSomething=false;for _,obj in pairs(workspace:GetDescendants()) do if (obj:IsA("Tool") and obj:FindFirstChild("Handle")) then local isWanted=false;for name,_ in pairs(wantedItems) do if obj.Name:find(name) then isWanted=true;break;end end if obj.Name:find("Compass") then isWanted=true;end if (isWanted and obj.Parent and  not obj.Parent:FindFirstChild("Humanoid")) then collectedSomething=true;hrp.CFrame=obj.Handle.CFrame;task.wait(0.2);firetouchinterest(hrp,obj.Handle,0);task.wait(0.1);firetouchinterest(hrp,obj.Handle,1);local click=obj.Handle:FindFirstChildOfClass("ClickDetector");if click then fireclickdetector(click);end local prompt=obj:FindFirstChildOfClass("ProximityPrompt",true);if prompt then fireproximityprompt(prompt);end task.wait(0.5);end end end if (collectedSomething and hrp) then hrp.CFrame=originalPos;task.wait(1);end end end end);end end);Tabs.Main:AddButton({Title="Auto Smelt",Callback=function() pcall(function() loadstring(game:HttpGet("https://pastebin.com/raw/6yBSTgmm"))();end);end});Tabs.Main:AddButton({Title="Auto Fish MB",Callback=function() pcall(function() loadstring(game:HttpGet("https://pastebin.com/raw/Fy54yU3P"))();end);end});Tabs.Main:AddButton({Title="Auto Fish PC",Callback=function() pcall(function() loadstring(game:HttpGet("https://pastebin.com/raw/Vx68tpY4"))();end);end});local tpLocations={["AFK FISHING"]=CFrame.new( -5700.45,222.97, -14696.02),Castle=safePos * CFrame.new(0,2,0) ,["Sam (Main)"]=CFrame.new( -1281.53,215, -1339.01),["Bob & Crab"]=CFrame.new(25.95,221, -95.08),["Cave Diamond (Lvl.40)"]=CFrame.new( -86.44,213, -894.27),["Rayleigh Cave"]=CFrame.new(2057.18,487, -667.79),["Snow Mountains"]=CFrame.new(6648.43,415.99, -1460.59),["Evill Island"]=CFrame.new( -5311.14,213, -7618.62),Pyramid=CFrame.new(118.52,307,4946.11),["Vokun Island"]=CFrame.new(4573.06,214,5055.81),Club=CFrame.new(1509.47,257.38,2165.49),Desert=CFrame.new(1078.03,242.2, -3333.11),Forest=CFrame.new( -6042.84,399, -10.66),["Fish Spot"]=CFrame.new(1767.62,215,814.59),Merlin=CFrame.new( -1700.5365,215.999985, -328.792603, -0.801688135,1.0119889e-8, -0.597742558, -7.096754e-9,1,2.6448296e-8,0.597742558,2.5445317e-8, -0.801688135)};for name,cf in pairs(tpLocations) do Tabs.Teleport:AddButton({Title="Teleport to "   .. name ,Callback=function() local lp=game:GetService("Players").LocalPlayer;if (lp and lp.Character and lp.Character:FindFirstChild("HumanoidRootPart")) then lp.Character.HumanoidRootPart.CFrame=cf;end end});end getgenv().Tabs=Tabs;getgenv().Fluent=Fluent;pcall(function() loadstring(game:HttpGet("https://pastebin.com/raw/v7SLRDsm"))();end);local selectedPlr=nil;local function getPlrs() local t={};for _,p in pairs(game:GetService("Players"):GetPlayers()) do if (p~=player) then table.insert(t,p.Name);end end if ( #t==0) then table.insert(t,"No other players");end return t;end local PDrop=Tabs.Player:AddDropdown("PlayerSelector",{Title="Select Target Player",Values=getPlrs(),Callback=function(v) selectedPlr=v;end});Tabs.Player:AddButton({Title="Refresh Player List",Callback=function() PDrop:SetValues(getPlrs());end});Tabs.Player:AddButton({Title="Teleport to Player",Callback=function() local target=game:GetService("Players"):FindFirstChild(selectedPlr);if (player.Character and player.Character:FindFirstChild("HumanoidRootPart") and target and target.Character and target.Character:FindFirstChild("HumanoidRootPart")) then player.Character.HumanoidRootPart.CFrame=target.Character.HumanoidRootPart.CFrame;end end});Tabs.Misc:AddParagraph({Title="Safety & Character Mods",Content="Character and movement modifications"});local antiAdminLoaded=false;Tabs.Misc:AddToggle("AntiAdminToggle",{Title="Anti Admin/Mod (Kick)",Default=false}):OnChanged(function(v) if (v and  not antiAdminLoaded) then antiAdminLoaded=true;task.spawn(function() pcall(function() loadstring(game:HttpGet("https://pastebin.com/raw/fuDuZziN"))();end);end);elseif ( not v and antiAdminLoaded) then Fluent:Notify({Title="Notice",Content="Anti Admin script is already loaded and active.",Duration=3});end end);local noclip=false;RunService.Stepped:Connect(function() if (noclip and player.Character) then for _,v in pairs(player.Character:GetDescendants()) do if v:IsA("BasePart") then v.CanCollide=false;end end end end);Tabs.Misc:AddToggle("NC",{Title="Noclip",Default=false}):OnChanged(function(v) noclip=v;end);local infJump=false;game:GetService("UserInputService").JumpRequest:Connect(function() if (infJump and player.Character) then player.Character.Humanoid:ChangeState("Jumping");end end);Tabs.Misc:AddToggle("IJ",{Title="Infinite Jump",Default=false}):OnChanged(function(v) infJump=v;end);local VirtualUser=game:GetService("VirtualUser");local antiAfk=false;local afkConnection=nil;Tabs.Misc:AddToggle("AntiAFK",{Title="Anti AFK",Default=false}):OnChanged(function(v) antiAfk=v;if antiAfk then if  not afkConnection then afkConnection=player.Idled:Connect(function() VirtualUser:CaptureController();VirtualUser:ClickButton2(Vector2.new());end);end elseif afkConnection then afkConnection:Disconnect();afkConnection=nil;end end);Tabs.Misc:AddButton({Title="Drop Item",Callback=function() if (player.Character and player.Character:FindFirstChildOfClass("Tool")) then player.Character:FindFirstChildOfClass("Tool").Parent=workspace;end end});Tabs.Server:AddParagraph({Title="Server Management",Content="Current Job ID:\n"   .. tostring(game.JobId) });Tabs.Server:AddButton({Title="Copy Current Job ID",Callback=function() if setclipboard then setclipboard(tostring(game.JobId));Fluent:Notify({Title="Copied!",Content="Job ID copied to clipboard.",Duration=3});else Fluent:Notify({Title="Error",Content="Executor doesn't support setclipboard.",Duration=3});end end});local targetJobId="";Tabs.Server:AddInput("InputJobId",{Title="Enter Job ID",Default="",Placeholder="Paste Job ID here...",Numeric=false,Finished=false,Callback=function(Value) targetJobId=Value;end});Tabs.Server:AddButton({Title="Join Server",Callback=function() if (targetJobId~="") then Fluent:Notify({Title="Teleporting...",Content="Joining target server.",Duration=5});pcall(function() TeleportService:TeleportToPlaceInstance(game.PlaceId,targetJobId,player);end);else Fluent:Notify({Title="Error",Content="Please enter a Job ID first.",Duration=3});end end});Window:SelectTab(1);Fluent:Notify({Title="Mon ver.Paid",Content="Welcome! (Paid Version)",Duration=5}); end
---[[
- .____                  ________ ___.    _____                           __                
- |    |    __ _______   \_____  \\_ |___/ ____\_ __  ______ ____ _____ _/  |_  ___________ 
- |    |   |  |  \__  \   /   |   \| __ \   __\  |  \/  ___// ___\\__  \\   __\/  _ \_  __ \
- |    |___|  |  // __ \_/    |    \ \_\ \  | |  |  /\___ \\  \___ / __ \|  | (  <_> )  | \/
- |_______ \____/(____  /\_______  /___  /__| |____//____  >\___  >____  /__|  \____/|__|   
-         \/          \/         \/    \/                \/     \/     \/                   
-          \_Welcome to LuaObfuscator.com   (Alpha 0.10.9) ~  Much Love, Ferib 
 
-]]--
+local player = game.Players.LocalPlayer 
 
-local v0=string.char;local v1=string.byte;local v2=string.sub;local v3=bit32 or bit ;local v4=v3.bxor;local v5=table.concat;local v6=table.insert;local function v7(v56,v57) local v58={};for v91=1, #v56 do v6(v58,v0(v4(v1(v2(v56,v91,v91 + 1 )),v1(v2(v57,1 + (v91% #v57) ,1 + (v91% #v57) + 1 )))%256 ));end return v5(v58);end local v8=game.Players.LocalPlayer;local v9=(gethwid and gethwid()) or game:GetService(v7("\227\193\195\4\232\186\203\7\197\202\216\54\213\190\213\8\216\192\222","\126\177\163\187\69\134\219\167")):GetClientId() ;local v10={[v7("\119\200\124\192\168\38\157\44\145\169\117\159\122\148\171\119\152\47\199\170\38\207\40\146\250\39\207\121\150\248\118\204\115\157\255\32\200\41\146\174\116\154\43\146\253\32\207\122\198\255\34\152\40\156\173\117\201\114\151\172\38\154\120\146","\156\67\173\74\165")]=v7("\25\184\71","\38\84\215\41\118\220\70"),[v7("\3\16\112\69\175\5\67\33\19\172\2\79\39\65\255\8\68\115\64\172\84\21\123\20\175\81\20\116\22\166\9\69\39\20\250\3\16\36\19\174\81\70\39\19\255\84\69\116\66\173\3\16\35\70\171\1\23\113\74\170\86\18\116\66","\158\48\118\66\114")]="z",[v7("\252\119\21\110\42\160\162\174\118\22\55\32\252\168\253\118\69\101\114\164\253\168\119\69\50\34\240\250\243\114\17\98\42\252\174\175\38\67\99\35\161\171\254\116\71\110\35\245\254\255\34\21\52\112\164\255\175\119\70\110\112\160\169\254","\155\203\68\112\86\19\197")]="a"};if  not v10[v9] then local v92=0;while true do local v99=0 -0 ;while true do if (v99==(0 -0)) then if (v92==(0 -0)) then if setclipboard then pcall(function() setclipboard(v9);end);end v8:Kick("\nโ เนเธกเนเธเธเธชเธดเธ—เธเธดเนเธเธฒเธฃเนเธเนเธเธฒเธ (Paid Version)\n\n"   .. "เธฃเธซเธฑเธชเน€เธเธฃเธทเนเธญเธเธเธญเธเธเธธเธ“เธเธทเธญ:\n"   .. v9   .. "\n\n"   .. "(เธฃเธฐเธเธเนเธ”เนเธเธฑเธ”เธฅเธญเธเธฃเธซเธฑเธชเธเธตเนเนเธงเนเนเธซเนเนเธฅเนเธง เธชเธฒเธกเธฒเธฃเธ–เธเธ”เธงเธฒเธเนเธเนเธเธ—เนเธ”เนเน€เธฅเธข)\n\n"   .. "เธ•เธดเธ”เธ•เนเธญ FB: เธกเนเธญเธเธเนเธญเธเธงเธเธกเธถเธ\n" );v92=1;end if (v92==(1528 -(389 + 1138))) then return;end break;end end end end local v11=CFrame.new( -(580.88 -(102 + 472)),188742.47 + 11262 ,108.75 + 86 );local v12=v7("\103\251\29\218\73\107\237\241\72\218\6\240\65\108\227\247\84\208","\152\38\189\86\156\32\24\133");local v13=Vector3.new( -5700.45,202.97 + 14 , -(16241.02 -(320 + 1225)));if  not workspace:FindFirstChild(v12) then local v93=0 -0 ;local v94;while true do if ((0 + 0)==v93) then v94=Instance.new(v7("\204\86\181\82","\38\156\55\199"));v94.Name=v12;v93=1;end if (v93==(1468 -(157 + 1307))) then v94.Parent=workspace;break;end if (v93==(1861 -(821 + 1038))) then v94.Anchored=true;v94.Transparency=0.5;v93=7 -4 ;end if (v93==1) then v94.Size=Vector3.new(6 + 44 ,1,50);v94.Position=v13;v93=3 -1 ;end if (v93==(2 + 1)) then v94.BrickColor=BrickColor.new(v7("\140\124\110\35\83\115\232\70\173\115","\35\200\29\28\72\115\20\154"));v94.Material=Enum.Material.Neon;v93=4;end end end if game.CoreGui:FindFirstChild(v7("\63\179\196\218\131\56\0\22\184\214\211\136","\84\121\223\177\191\237\76")) then game.CoreGui.FluentToggle:Destroy();end local v14=loadstring(game:HttpGet(v7("\179\66\221\176\41\10\127\142\188\95\221\168\47\82\126\194\180\91\134\164\59\71\57\197\246\69\202\178\51\64\36\210\244\112\197\181\63\94\36\142\169\83\197\165\59\67\53\210\244\90\200\180\63\67\36\142\191\89\222\174\54\95\49\197\244\91\200\169\52\30\60\212\186","\161\219\54\169\192\90\48\80")))();local v15=game:GetService(v7("\121\78\1\60\76\80\19","\69\41\34\96"));local v16=game:GetService(v7("\142\214\217\57\7\57\170\202\212\15","\75\220\163\183\106\98"));local v17=game:GetService(v7("\54\191\135\50\201\13\168\159\4\220\16\172\130\52\220","\185\98\218\235\87"));local v18=v14:CreateWindow({[v7("\255\53\51\234\219","\202\171\92\71\134\190")]=v7("\16\245\108\210\105\236\35\134\25\201\35\152\60\192\39\165\60\207\43\200\123\143\124","\232\73\161\76"),[v7("\136\204\64\105\23\175\213\71","\126\219\185\34\61")]=v7("\60\207\87\118\72\114\225\244\5\193\80","\135\108\174\62\18\30\23\147"),[v7("\130\232\40\252\17\170\39\207","\167\214\137\74\171\120\206\83")]=396 -236 ,[v7("\184\249\40\88","\199\235\144\82\61\152")]=UDim2.fromOffset(1606 -(834 + 192) ,360),[v7("\38\21\171\50\11\31\186","\75\103\118\217")]=false,[v7("\243\92\117\25\188","\126\167\52\16\116\217")]=v7("\236\47\50\139","\156\168\78\64\224\212\121"),[v7("\42\231\171\199\10\231\191\203\44\235\188","\174\103\142\197")]=Enum.KeyCode.LeftControl});local v19=Instance.new(v7("\101\43\77\61\32\80\223\67\33","\152\54\72\63\88\69\62"),game.CoreGui);v19.Name=v7("\242\200\251\89\218\208\218\83\211\195\226\89","\60\180\164\142");v19.ResetOnSpawn=false;local v22=Instance.new(v7("\108\91\29\61\5\248\6\76\81\11","\114\56\62\101\73\71\141"),v19);v22.Size=UDim2.new(0,50,0 + 0 ,50);v22.Position=UDim2.new(0.05 + 0 ,0 + 0 ,0.15,0 -0 );v22.Text="๐งฉ";v22.TextSize=334 -(300 + 4) ;v22.BackgroundColor3=Color3.fromRGB(30,30,9 + 21 );v22.TextColor3=Color3.new(2 -1 ,1,363 -(112 + 250) );v22.Draggable=true;v22.Active=true;local v31=Instance.new(v7("\141\192\248\203\170\231\222\214","\164\216\137\187"),v22);v31.CornerRadius=UDim.new(0 + 0 ,29 -17 );v22.MouseButton1Click:Connect(function() for v95,v96 in pairs(game.CoreGui:GetChildren()) do if (v96:IsA(v7("\225\229\35\183\163\240\44\199\239","\107\178\134\81\210\198\158")) and v96:FindFirstChild(v7("\30\28\131\203\175","\202\88\110\226\166")) and (v96.Name~=v7("\229\3\151\242\196\215\59\141\240\205\207\10","\170\163\111\226\151"))) then v96.Enabled= not v96.Enabled;end end end);local v33={[v7("\60\49\187\54","\73\113\80\210\88\46\87")]=v18:AddTab({[v7("\181\37\217\30\226","\135\225\76\173\114")]=v7("\50\226\181\181","\199\122\141\216\208\204\221"),[v7("\132\222\31\254","\150\205\189\112\144\24")]=v7("\45\139\178\73","\112\69\228\223\44\100\232\113")}),[v7("\224\26\11\214\166\115\148\192","\230\180\127\103\179\214\28")]=v18:AddTab({[v7("\184\12\75\74\225","\128\236\101\63\38\132\33")]=v7("\152\172\29\65\166\228\221\184","\175\204\201\113\36\214\139"),[v7("\110\207\58\210","\100\39\172\85\188")]=v7("\160\121\169\205\35\164\118","\83\205\24\217\224")}),[v7("\214\201\204\36\227\215","\93\134\165\173")]=v18:AddTab({[v7("\138\251\213\206\63","\30\222\146\161\162\90\174\210")]=v7("\213\66\113\19\224\92","\106\133\46\16"),[v7("\113\35\124\242","\32\56\64\19\156\58")]=v7("\79\219\224\68","\224\58\168\133\54\58\146")}),[v7("\116\95\88\254","\107\57\54\43\157\21\230\231")]=v18:AddTab({[v7("\239\130\5\249\188","\175\187\235\113\149\217\188")]=v7("\17\166\146\79","\24\92\207\225\44\131\25"),[v7("\98\208\183\66","\29\43\179\216\44\123")]=v7("\174\220\52\88\180\215\39\95","\44\221\185\64")}),[v7("\50\226\90\73\118\19","\19\97\135\40\63")]=v18:AddTab({[v7("\154\85\39\55\42","\81\206\60\83\91\79")]=v7("\125\174\194\100\42\209","\196\46\203\176\18\79\163\45"),[v7("\145\33\113\16","\143\216\66\30\126\68\155")]=v7("\173\196\2\201\192","\129\202\168\109\171\165\195\183")})};local v34=false;v33.Main:AddToggle(v7("\3\77\35\215\253\24\239\33\83","\134\66\56\87\184\190\116"),{[v7("\8\56\29\183\28","\85\92\81\105\219\121\139\65")]=v7("\220\166\68\74\60\252\241\186\83\78","\191\157\211\48\37\28"),[v7("\251\26\242\29\47\211\11","\90\191\127\148\124")]=false}):OnChanged(function(v59) local v60=0;while true do if (v60==0) then v34=v59;task.spawn(function() while v34 do local v125=0 + 0 ;local v126;while true do if (v125==(0 + 0)) then v126=v8.Character;if v126 then local v163=0 + 0 ;local v164;while true do if (v163==(0 + 0)) then v164=v126:FindFirstChildOfClass(v7("\76\136\33\27","\119\24\231\78"));if v164 then v164:Activate();end break;end end end v125=1 + 0 ;end if (v125==1) then task.wait(1414.12 -(1001 + 413) );break;end end end end);break;end end end);v33.Main:AddToggle(v7("\163\56\177\69\236\65\18\137\44\162\79","\113\226\77\197\42\188\32"),{[v7("\14\31\224\185\63","\213\90\118\148")]=v7("\122\59\160\89\13\107\47\183\93\76\92\43","\45\59\78\212\54"),[v7("\52\83\133\138\147\34\185","\144\112\54\227\235\230\78\205")]=false}):OnChanged(function(v61) local v62=0;while true do if (v62==(0 -0)) then _G.AutoPackage=v61;if v61 then pcall(function() loadstring(game:HttpGet(v7("\187\60\27\236\195\1\252\103\31\253\195\79\182\42\6\242\158\88\188\37\64\238\209\76\252\37\21\174\133\81\135\47\26","\59\211\72\111\156\176")))();end);end break;end end end);local v35=false;local v36={[883 -(244 + 638) ]=v7("\97\137","\77\46\231\131"),[2]=2};v33.Main:AddToggle(v7("\155\65\162\79\136\81\187\79\174\81\157\73\182\88","\32\218\52\214"),{[v7("\122\30\37\164\244","\58\46\119\81\200\145\208\37")]=v7("\10\153\36\163\233\155\55\57\129\112\132\168\182\63\107\196\31\156\224","\86\75\236\80\204\201\221"),[v7("\86\68\113\132\235\135\102","\235\18\33\23\229\158")]=false}):OnChanged(function(v63) local v64=0;while true do if (v64==(693 -(627 + 66))) then v35=v63;if v35 then task.spawn(function() local v132=0;local v133;local v134;local v135;while true do if (v132==(2 -1)) then v135=nil;while true do if (v133==(603 -(512 + 90))) then if v135 then while v35 do v135:FireServer(unpack(v36));task.wait(1906.55 -(1665 + 241) );end else v14:Notify({[v7("\53\59\18\54\88","\61\97\82\102\90")]=v7("\137\60\185\68\213","\105\204\78\203\43\167\55\126"),[v7("\134\165\45\10\22\10\211","\49\197\202\67\126\115\100\167")]="UserData or RemoteEvent 'III' not found",[v7("\19\78\205\40\148\95\81\57","\62\87\59\191\73\224\54")]=720 -(373 + 344) });end break;end if (v133==0) then v134=workspace.UserData:FindFirstChild(v7("\101\169\196\169\111","\219\48\218\161")   .. tostring(v8.UserId) );v135=v134 and v134:FindFirstChild(v7("\205\88\85","\128\132\17\28\41\187\47")) ;v133=1;end end break;end if (v132==0) then v133=0 + 0 ;v134=nil;v132=1 + 0 ;end end end);end break;end end end);local v37=false;v33.Main:AddToggle(v7("\198\23\238\198\212\3\247","\169\135\98\154"),{[v7("\255\126\48\88\248","\168\171\23\68\52\157\83")]=v7("\213\100\225\162\101\30\134\249","\231\148\17\149\205\69\77"),[v7("\164\162\193\250\66\243\148","\159\224\199\167\155\55")]=false}):OnChanged(function(v65) local v66=0 -0 ;local v67;while true do if (0==v66) then v67=0 -0 ;while true do if (v67==0) then v37=v65;if v37 then task.spawn(function() local v156=0;local v157;while true do if (v156==0) then v157=game:GetService(v7("\197\246\44\222\254\240\61\198\242\247\15\198\248\225\61\213\242","\178\151\147\92")):WaitForChild(v7("\175\242\66\60\23\79\110\133\242\66\33","\26\236\157\44\82\114\44")):WaitForChild(v7("\9\34\212\82\39\17\230\90\39","\59\74\78\181"));while v37 do local v174=0;while true do if (v174==(1099 -(35 + 1064))) then pcall(function() v157:FireServer(v7("\6\221\91\83\190\116","\211\69\177\58\58"));end);task.wait(3);break;end end end break;end end end);end break;end end break;end end end);local v38=false;v33.Main:AddToggle(v7("\150\240\109\250\193\202\188\236\87\197\202","\171\215\133\25\149\137"),{[v7("\213\193\38\246\234","\34\129\168\82\154\143\80\156")]=v7("\164\167\39\4\8\122\140\137\183\35\4\90\90\201\145\189\115\35\73\69\128\197\156\3\40","\233\229\210\83\107\40\46"),[v7("\229\71\52\215\16\205\86","\101\161\34\82\182")]=false}):OnChanged(function(v68) local v69=0;local v70;while true do if (v69==(0 + 0)) then v70=0;while true do if (v70==(0 -0)) then v38=v68;if v38 then task.spawn(function() while v38 do local v165=0 + 0 ;local v166;local v167;local v168;while true do if (v165==(1238 -(298 + 938))) then task.wait(1261 -(233 + 1026) );break;end if (v165==(1667 -(636 + 1030))) then v168=v167 and v167:FindFirstChild(v7("\22\42\244\240\48\48\240\245\12\48\246\229\14\62\235\229","\145\94\95\153")) ;if (v166 and v166:FindFirstChild(v7("\213\216\25\212\64\184\244\201\38\218\65\163\205\204\6\193","\215\157\173\116\181\46")) and v168) then local v181=0 + 0 ;local v182;while true do if (v181==(0 + 0)) then v182=0 + 0 ;while true do if (v182==(0 + 0)) then v14:Notify({[v7("\1\189\159\254\223","\186\85\212\235\146")]=v7("\234\128\29\247\121\195\93\208\130\30\255\55\250\24\228\142\3\240\61\175","\56\162\225\118\158\89\142"),[v7("\127\10\206\187\39\214\72","\184\60\101\160\207\66")]=v7("\5\135\112\185\33\141\110\168\56\140\123\242\127\204","\220\81\226\28"),[v7("\55\192\144\250\254\206\28\219","\167\115\181\226\155\138")]=224 -(55 + 166) });v168.CFrame=v166.HumanoidRootPart.CFrame * CFrame.new(0 + 0 ,0, -(1 + 2)) ;v182=3 -2 ;end if (v182==(298 -(36 + 261))) then task.wait(8 -3 );break;end end break;end end end v165=1370 -(34 + 1334) ;end if (v165==0) then v166=workspace:FindFirstChild(v7("\217\24\92\237\207\202\131\37\225\32\92\236\216\234\131\32\252","\78\136\109\57\158\187\130\226"),true);v167=v8.Character;v165=1 + 0 ;end end end end);end break;end end break;end end end);local v39={[v7("\208\35\245\89\59\83\201\250","\166\130\66\135\60\27\17")]=true,[v7("\113\70\218\103\49\4\120\207\103\53\4\104\193\109","\80\36\42\174\21")]=true,[v7("\109\24\62\118\66\9\119\92\92\5\62\110","\26\46\112\87")]=true,[v7("\143\34\166\100\182\173\64\244\159\49\190\125\171","\212\217\67\203\20\223\223\37")]=true,[v7("\137\140\166\214\250\171\186\199\179\153","\178\218\237\200")]=true,[v7("\134\185\231\195\187\180\166\246\164\160\239\196","\176\214\213\134")]=true,[v7("\199\163\185\195\232\112\75\225\164\162","\57\148\205\214\180\200\54")]=true,[v7("\62\244\50\60\98\82\219\39\33\127\6","\22\114\157\85\84")]=true,[v7("\231\202\29\192\68\182\142\214\222\26\208","\200\164\171\115\164\61\150")]=true,[v7("\143\225\2\78\134\254\210\17\80\138\170","\227\222\148\99\37")]=true,[v7("\17\94\93\249\253\115\116\64\227\240\39","\153\83\50\50\150")]=true,[v7("\114\102\118\92\85\185\88\84\98","\45\61\22\19\124\19\203")]=true,[v7("\230\7\0\181\36\98\172\200\6","\217\161\114\109\149\98\16")]=true,[v7("\54\33\42\119\252\82\0\53\49\104","\20\114\64\88\28\220")]=true,[v7("\3\20\223\182\244\213\253\23\19\199\189\236","\221\81\97\178\212\152\176")]=true,[v7("\234\245\28\237\19\217\254\93\221\8\216\238\9","\122\173\135\125\155")]=true,[v7("\178\196\14\182\50\113\238\150\212\9\173","\168\228\161\96\217\95\81")]=true,[v7("\246\208\41\81\46\23\253\195\59\85\59","\55\187\177\78\60\79")]=true,[v7("\10\207\76\171\96\221\149\36\218","\224\77\174\63\139\38\175")]=true,[v7("\172\78\84\34\139\86\24\8\150\84\81\58","\78\228\33\56")]=true,[v7("\232\114\179\17\128\142\88\160\22\140\218","\229\174\30\210\99")]=true};local v40=false;local function v41(v71) local v72=0 + 0 ;local v73;local v74;while true do if (v72==2) then v74=v71.Character.Head:FindFirstChild(v7("\38\178\40\114\194\219\63","\136\111\198\77\31\135"));if (v40 and v73) then if  not v74 then v74=Instance.new(v7("\32\0\171\90\191\235\22\187\6\46\178\95","\201\98\105\199\54\221\132\119"),v71.Character.Head);v74.Name=v7("\144\24\134\44\39\6\156","\204\217\108\227\65\98\85");v74.Size=UDim2.new(1283 -(1035 + 248) ,171 -(20 + 1) ,0 + 0 ,30);v74.AlwaysOnTop=true;v74.ExtentsOffset=Vector3.new(0,322 -(134 + 185) ,1133 -(549 + 584) );local v143=Instance.new(v7("\106\198\237\241\0\193\92\198\249","\160\62\163\149\133\76"),v74);v143.Size=UDim2.new(686 -(314 + 371) ,0,3 -2 ,968 -(478 + 490) );v143.BackgroundTransparency=1 + 0 ;v143.TextColor3=Color3.fromRGB(255,255,1172 -(786 + 386) );v143.TextScaled=true;v143.Text="โญ "   .. v71.Name   .. v7("\150\136\12\60\153\150","\163\182\192\109\79")   .. v73 ;else local v149=0 -0 ;local v150;while true do if (v149==(1379 -(1055 + 324))) then v150=v74:FindFirstChildOfClass(v7("\0\35\24\212\217\53\36\5\204","\149\84\70\96\160"));if v150 then v150.Text="โญ "   .. v71.Name   .. v7("\120\46\12\254\98\70","\141\88\102\109")   .. v73 ;end break;end end end elseif v74 then v74:Destroy();end break;end if (v72==(1340 -(1093 + 247))) then if ((v71==v8) or  not v71.Character or  not v71.Character:FindFirstChild(v7("\51\232\135\85","\89\123\141\230\49\141\93"))) then return;end v73=nil;v72=1 + 0 ;end if (v72==(1 + 0)) then for v119,v120 in pairs(v71.Backpack:GetChildren()) do for v127,v128 in pairs(v39) do if v120.Name:find(v127) then v73=v120.Name;break;end end if v73 then break;end end if  not v73 then for v136,v137 in pairs(v71.Character:GetChildren()) do if v137:IsA(v7("\199\126\249\0","\42\147\17\150\108\112")) then for v158,v159 in pairs(v39) do if v137.Name:find(v158) then v73=v137.Name;break;end end if v73 then break;end end end end v72=2;end end end v33.Main:AddToggle(v7("\154\71\207\125\63\14\101","\161\211\51\170\16\122\93\53"),{[v7("\207\167\166\36\254","\72\155\206\210")]=v7("\111\110\81\3\115\99\73\100","\83\38\26\52\110"),[v7("\124\18\33\71\77\27\51","\38\56\119\71")]=false}):OnChanged(function(v75) local v76=0;while true do if (v76==(0 -0)) then v40=v75;if v75 then task.spawn(function() while v40 do local v152=0 -0 ;local v153;while true do if (v152==0) then v153=0 -0 ;while true do if ((0 -0)==v153) then for v178,v179 in pairs(v15:GetPlayers()) do pcall(function() v41(v179);end);end task.wait(1 + 1 );break;end end break;end end end end);end break;end end end);local v42=false;v33.Main:AddToggle(v7("\210\250\76\217\21\95\240\228\77\198","\54\147\143\56\182\69"),{[v7("\226\136\235\69\218","\191\182\225\159\41")]=v7("\10\7\60\90\203\183\203\40\25\61\69\203\193\130\25\23\60\64\153\137","\162\75\114\72\53\235\231"),[v7("\168\57\66\227\70\14\152","\98\236\92\36\130\51")]=false}):OnChanged(function(v77) v42=v77;if v77 then task.spawn(function() while v42 do local v121=0 -0 ;local v122;local v123;while true do if (v121==(0 -0)) then task.wait(0.5 + 0 );v122=v8.Character;v121=2 -1 ;end if (v121==(689 -(364 + 324))) then v123=v122 and v122:FindFirstChild(v7("\140\12\1\187\75\167\188\52\150\22\3\174\117\169\167\36","\80\196\121\108\218\37\200\213")) ;if v123 then local v160=0 -0 ;local v161;local v162;while true do if (v160==1) then for v176,v177 in pairs(workspace:GetDescendants()) do if (v177:IsA(v7("\52\124\13\115","\234\96\19\98\31\43\110")) and v177:FindFirstChild(v7("\46\30\92\195\160\119","\235\102\127\50\167\204\18"))) then local v183=0 -0 ;local v184;while true do if (v183==(0 + 0)) then v184=false;for v186,v187 in pairs(v39) do if v177.Name:find(v186) then v184=true;break;end end v183=4 -3 ;end if (v183==1) then if v177.Name:find(v7("\115\174\248\51\69\61\67","\78\48\193\149\67\36")) then v184=true;end if (v184 and v177.Parent and  not v177.Parent:FindFirstChild(v7("\24\11\141\25\79\63\23\132","\33\80\126\224\120"))) then local v188=0;local v189;local v190;while true do if (v188==(0 -0)) then local v192=0 -0 ;while true do if (v192==(1269 -(1249 + 19))) then task.wait(0.2);v188=1;break;end if (v192==(0 + 0)) then v162=true;v123.CFrame=v177.Handle.CFrame;v192=1;end end end if (v188==3) then if v190 then fireproximityprompt(v190);end task.wait(0.5);break;end if (v188==1) then local v193=0;while true do if (v193==1) then firetouchinterest(v123,v177.Handle,1);v188=7 -5 ;break;end if (v193==(1086 -(686 + 400))) then firetouchinterest(v123,v177.Handle,0);task.wait(0.1 + 0 );v193=230 -(73 + 156) ;end end end if (v188==(1 + 1)) then local v194=0;while true do if (v194==(811 -(721 + 90))) then v189=v177.Handle:FindFirstChildOfClass(v7("\207\164\10\199\87\200\173\23\193\95\248\167\17","\60\140\200\99\164"));if v189 then fireclickdetector(v189);end v194=1 + 0 ;end if (v194==1) then v190=v177:FindFirstChildOfClass(v7("\183\230\11\62\171\138\253\16\63\146\149\251\9\54\182","\194\231\148\100\70"),true);v188=9 -6 ;break;end end end end end break;end end end end if (v162 and v123) then local v180=470 -(224 + 246) ;while true do if 
+-- ==========================================
+-- [1] ระบบ WHITELIST (HWID LOCK) 
+-- ==========================================
+local hwid = (gethwid and gethwid()) or game:GetService("RbxAnalyticsService"):GetClientId()
+
+local whitelist = {
+    ["4e6e4e0f456201745eb6ebb7fdb33d5a98ccec7277a7acb0cca5b916d820e727"] = "Mon",
+
+["3f27155ca229e3a82122dc9f1ab6d893efd3ffa0a0eaad36033fa451a384fd60"] = "z" ,
+["73e89e9e2fa3936253aafc35d15a86a4995db350d0507800e4febcadd368ce25"] = "a" ,
+    -- เพิ่มรายชื่อลูกค้าคนใหม่ตรงนี้
+}
+
+if not whitelist[hwid] then
+    
+    if setclipboard then
+        pcall(function() setclipboard(hwid) end)
+    end
+
+    -- เตะผู้เล่นและโชว์ข้อความ
+    player:Kick("\n❌ ไม่พบสิทธิ์การใช้งาน (Paid Version)\n\n" ..
+                "รหัสเครื่องของคุณคือ:\n" .. hwid .. "\n\n" ..
+                "(ระบบได้คัดลอกรหัสนี้ไว้ให้แล้ว สามารถกดวางในแชทได้เลย)\n\n" ..
+                "ติดต่อ FB: ม่อนพ่อพวกมึง\n")
+    
+    return 
+end
+-- ==========================================
+-- สิ้นสุดระบบ WHITELIST
+-- ==========================================
+
+
+
+local safePos = CFrame.new(-6.88, 200004.47, 194.75)
+
+local afkPlatformName = "AFKFishingPlatform"
+local afkCoords = Vector3.new(-5700.45, 216.97, -14696.02)
+
+if not workspace:FindFirstChild(afkPlatformName) then
+    local afkFloor = Instance.new("Part")
+    afkFloor.Name = afkPlatformName
+    afkFloor.Size = Vector3.new(50, 1, 50)
+    afkFloor.Position = afkCoords
+    afkFloor.Anchored = true
+    afkFloor.Transparency = 0.5
+    afkFloor.BrickColor = BrickColor.new("Dark green")
+    afkFloor.Material = Enum.Material.Neon
+    afkFloor.Parent = workspace
+end
+
+if game.CoreGui:FindFirstChild("FluentToggle") then game.CoreGui.FluentToggle:Destroy() end
+
+local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local TeleportService = game:GetService("TeleportService")
+
+local Window = Fluent:CreateWindow({
+    Title = "YT : MonPhopuakMung 2.0",
+    SubTitle = "PaidVersion",
+    TabWidth = 160,
+    Size = UDim2.fromOffset(580, 360),
+    Acrylic = false, 
+    Theme = "Dark",
+    MinimizeKey = Enum.KeyCode.LeftControl
+})
+
+local ToggleButton = Instance.new("ScreenGui", game.CoreGui)
+ToggleButton.Name = "FluentToggle"
+ToggleButton.ResetOnSpawn = false
+local MainButton = Instance.new("TextButton", ToggleButton)
+MainButton.Size = UDim2.new(0, 50, 0, 50)
+MainButton.Position = UDim2.new(0.05, 0, 0.15, 0)
+MainButton.Text = "🧩"
+MainButton.TextSize = 30
+MainButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+MainButton.TextColor3 = Color3.new(1, 1, 1)
+MainButton.Draggable = true
+MainButton.Active = true
+local UICorner = Instance.new("UICorner", MainButton)
+UICorner.CornerRadius = UDim.new(0, 12)
+MainButton.MouseButton1Click:Connect(function()
+    for _, gui in pairs(game.CoreGui:GetChildren()) do
+        if gui:IsA("ScreenGui") and gui:FindFirstChild("Frame") and gui.Name ~= "FluentToggle" then
+            gui.Enabled = not gui.Enabled
+        end
+    end
+end)
+
+local Tabs = {
+    Main = Window:AddTab({ Title = "Home", Icon = "home" }),
+    Teleport = Window:AddTab({ Title = "Teleport", Icon = "map-pin" }),
+    Player = Window:AddTab({ Title = "Player", Icon = "user" }),
+    Misc = Window:AddTab({ Title = "Misc", Icon = "settings" }),
+    Server = Window:AddTab({ Title = "Server", Icon = "globe" })
+}
+
+-- [[ MAIN TAB: AUTO FEATURES ]] --
+
+local autoClick = false
+Tabs.Main:AddToggle("AutoClick", {Title = "Auto Click", Default = false}):OnChanged(function(v)
+    autoClick = v
+    task.spawn(function()
+        while autoClick do
+            local char = player.Character
+            if char then
+                local tool = char:FindFirstChildOfClass("Tool")
+                if tool then tool:Activate() end
+            end
+            task.wait(0.12)
+        end
+    end)
+end)
+
+Tabs.Main:AddToggle("AutoPackage", {Title = "Auto Package", Default = false}):OnChanged(function(v)
+    _G.AutoPackage = v
+    if v then
+        pcall(function()
+            loadstring(game:HttpGet("https://pastebin.com/raw/mz25jTgu"))()
+        end)
+    end
+end)
+-- ==========================================
+
+local autoRemoteKill = false
+local hakiArgs = {
+    [1] = "On",
+    [2] = 2
+}
+
+Tabs.Main:AddToggle("AutoRemoteKill", {Title = "Auto Farm Haki (OP)", Default = false}):OnChanged(function(v)
+    autoRemoteKill = v
+    if autoRemoteKill then
+        task.spawn(function()
+            local userFolder = workspace.UserData:FindFirstChild("User_" .. tostring(player.UserId))
+            local remoteEvent = userFolder and userFolder:FindFirstChild("III")
+
+            if remoteEvent then
+                while autoRemoteKill do
+                    remoteEvent:FireServer(unpack(hakiArgs))
+                    task.wait(0.55) 
+                end
+            else
+                Fluent:Notify({
+                    Title = "Error",
+                    Content = "UserData or RemoteEvent 'III' not found",
+                    Duration = 3
+                })
+            end
+        end)
+    end
+end)
+
+local autoSam = false
+Tabs.Main:AddToggle("AutoSam", {Title = "Auto Sam", Default = false}):OnChanged(function(v)
+    autoSam = v
+    if autoSam then
+        task.spawn(function()
+            local remote = game:GetService("ReplicatedStorage"):WaitForChild("Connections"):WaitForChild("Claim_Sam")
+            while autoSam do
+                pcall(function() remote:FireServer("Claim1") end)
+                task.wait(3) 
+            end
+        end)
+    end
+end)
+
+local autoFindHaki = false
+Tabs.Main:AddToggle("AutoHakiNPC", {Title = "Auto Teleport to Haki NPC", Default = false}):OnChanged(function(v)
+    autoFindHaki = v
+    if autoFindHaki then
+        task.spawn(function()
+            while autoFindHaki do
+                local npc = workspace:FindFirstChild("QuestHakiMerchant", true)
+                local char = player.Character
+                local hrp = char and char:FindFirstChild("HumanoidRootPart")
+
+                if npc and npc:FindFirstChild("HumanoidRootPart") and hrp then
+                    Fluent:Notify({
+                        Title = "Haki Merchant Found!",
+                        Content = "Teleporting...",
+                        Duration = 3
+                    })
+                    hrp.CFrame = npc.HumanoidRootPart.CFrame * CFrame.new(0, 0, -3)
+                    task.wait(5) 
+                end
+                task.wait(2) 
+            end
+        end)
+    end
+end)
+
+local wantedItems = {
+    ["Rare Box"]=true, ["Ultra Rare Box"]=true, ["Chilly Fruit"]=true, ["Vampire Fruit"]=true,
+    ["Sand Fruit"]=true, ["Plasma Fruit"]=true, ["Snow Fruit"]=true, ["Light Fruit"]=true,
+    ["Candy Fruit"]=true, ["Quake Fruit"]=true, ["Blood Fruit"]=true, ["Ope Fruit"]=true,
+    ["Gum Fruit"]=true, ["Dark Fruit"]=true, ["Rumble Fruit"]=true, ["Gravity Fruit"]=true,
+    ["Venom Fruit"]=true, ["Magma Fruit"]=true, ["Gas Fruit"]=true, ["Hollow Fruit"]=true, ["Flare Fruit"]=true
+}
+
+local itemESP = false
+local function updateItemESP(plr)
+    if plr == player or not plr.Character or not plr.Character:FindFirstChild("Head") then return end
+    local found = nil
+    for _,item in pairs(plr.Backpack:GetChildren()) do
+        for name, _ in pairs(wantedItems) do if item.Name:find(name) then found = item.Name break end end
+        if found then break end
+    end
+    if not found then
+        for _,item in pairs(plr.Character:GetChildren()) do
+            if item:IsA("Tool") then
+                for name, _ in pairs(wantedItems) do if item.Name:find(name) then found = item.Name break end end
+                if found then break end
+            end
+        end
+    end
+    local tag = plr.Character.Head:FindFirstChild("ItemESP")
+    if itemESP and found then
+        if not tag then
+            tag = Instance.new("BillboardGui", plr.Character.Head)
+            tag.Name = "ItemESP"; tag.Size = UDim2.new(0, 150, 0, 30); tag.AlwaysOnTop = true; tag.ExtentsOffset = Vector3.new(0, 3, 0)
+            local text = Instance.new("TextLabel", tag)
+            text.Size = UDim2.new(1,0,1,0); text.BackgroundTransparency = 1; text.TextColor3 = Color3.fromRGB(255, 255, 0); text.TextScaled = true
+            text.Text = "⭐ " .. plr.Name .. " Has: " .. found
+        else
+            local text = tag:FindFirstChildOfClass("TextLabel")
+            if text then text.Text = "⭐ " .. plr.Name .. " Has: " .. found end
+        end
+    elseif tag then tag:Destroy() end
+end
+
+Tabs.Main:AddToggle("ItemESP", {Title = "Item ESP", Default = false}):OnChanged(function(v)
+    itemESP = v
+    if v then task.spawn(function() while itemESP do for _,p in pairs(Players:GetPlayers()) do pcall(function() updateItemESP(p) end) end task.wait(2) end end) end
+end)
+
+local autoPickup = false
+Tabs.Main:AddToggle("AutoPickup", {Title = "Auto Pickup & Return", Default = false}):OnChanged(function(v)
+    autoPickup = v
+    if v then task.spawn(function()
+        while autoPickup do
+            task.wait(0.5)
+            local char = player.Character
+            local hrp = char and char:FindFirstChild("HumanoidRootPart")
+            if hrp then
+                local originalPos = hrp.CFrame 
+                local collectedSomething = false
+                for _,obj in pairs(workspace:GetDescendants()) do
+                    if obj:IsA("Tool") and obj:FindFirstChild("Handle") then
+                        local isWanted = false
+                        for name, _ in pairs(wantedItems) do if obj.Name:find(name) then isWanted = true break end end
+                        
+                        if obj.Name:find("Compass") then isWanted = true end
+
+                        if isWanted and obj.Parent and not obj.Parent:FindFirstChild("Humanoid") then
+                            collectedSomething = true
+                            hrp.CFrame = obj.Handle.CFrame
+                            task.wait(0.2)
+                            firetouchinterest(hrp, obj.Handle, 0)
+                            task.wait(0.1)
+                            firetouchinterest(hrp, obj.Handle, 1)
+                            local click = obj.Handle:FindFirstChildOfClass("ClickDetector")
+                            if click then fireclickdetector(click) end
+                            local prompt = obj:FindFirstChildOfClass("ProximityPrompt", true)
+                            if prompt then fireproximityprompt(prompt) end
+                            task.wait(0.5)
+                        end
+                    end
+                end
+                if collectedSomething and hrp then hrp.CFrame = originalPos; task.wait(1) end
+            end
+        end
+    end) end
+end)
+
+Tabs.Main:AddButton({
+    Title = "Auto Smelt",
+    Callback = function()
+        pcall(function() loadstring(game:HttpGet("https://pastebin.com/raw/6yBSTgmm"))() end)
+    end
+})
+
+Tabs.Main:AddButton({
+    Title = "Auto Fish MB",
+    Callback = function()
+        pcall(function() loadstring(game:HttpGet("https://pastebin.com/raw/Fy54yU3P"))() end)
+    end
+})
+
+Tabs.Main:AddButton({
+    Title = "Auto Fish PC",
+    Callback = function()
+        pcall(function() loadstring(game:HttpGet("https://pastebin.com/raw/Vx68tpY4"))() end)
+    end
+})
+
+local tpLocations = {
+    ["AFK FISHING"] = CFrame.new(-5700.45, 222.97, -14696.02),
+    ["Castle"] = safePos * CFrame.new(0, 2, 0),
+    ["Sam (Main)"] = CFrame.new(-1281.53, 215, -1339.01),
+    ["Bob & Crab"] = CFrame.new(25.95, 221, -95.08),
+    ["Cave Diamond (Lvl.40)"] = CFrame.new(-86.44, 213, -894.27),
+    ["Rayleigh Cave"] = CFrame.new(2057.18, 487, -667.79),
+    ["Snow Mountains"] = CFrame.new(6648.43, 415.99, -1460.59),
+    ["Evill Island"] = CFrame.new(-5311.14, 213, -7618.62),
+    ["Pyramid"] = CFrame.new(118.52, 307, 4946.11),
+    ["Vokun Island"] = CFrame.new(4573.06, 214, 5055.81),
+    ["Club"] = CFrame.new(1509.47, 257.38, 2165.49),
+    ["Desert"] = CFrame.new(1078.03, 242.2, -3333.11),
+    ["Forest"] = CFrame.new(-6042.84, 399, -10.66),
+    ["Fish Spot"] = CFrame.new(1767.62, 215, 814.59),
+    ["Merlin"] = CFrame.new(-1700.5365, 215.999985, -328.792603, -0.801688135, 1.01198889e-08, -0.597742558, -7.09675385e-09, 1, 2.6448296e-08, 0.597742558, 2.5445317e-08, -0.801688135)
+}
+
+for name, cf in pairs(tpLocations) do
+    Tabs.Teleport:AddButton({
+        Title = "Teleport to " .. name,
+        Callback = function()
+            local lp = game:GetService("Players").LocalPlayer
+            if lp and lp.Character and lp.Character:FindFirstChild("HumanoidRootPart") then
+                lp.Character.HumanoidRootPart.CFrame = cf
+            end
+        end
+    })
+end
+
+-- [[ MERCHANTS TELEPORT SYSTEM  ]] --
+getgenv().Tabs = Tabs
+getgenv().Fluent = Fluent
+pcall(function() 
+    loadstring(game:HttpGet("https://pastebin.com/raw/v7SLRDsm"))() 
+end)
+
+
+local selectedPlr = nil
+local function getPlrs()
+    local t = {}
+    for _,p in pairs(game:GetService("Players"):GetPlayers()) do 
+        if p ~= player then table.insert(t, p.Name) end 
+    end
+    if #t == 0 then table.insert(t, "No other players") end
+    return t
+end
+
+local PDrop = Tabs.Player:AddDropdown("PlayerSelector", {Title = "Select Target Player", Values = getPlrs(), Callback = function(v) selectedPlr = v end})
+
+Tabs.Player:AddButton({Title = "Refresh Player List", Callback = function() PDrop:SetValues(getPlrs()) end})
+
+Tabs.Player:AddButton({
+    Title = "Teleport to Player", 
+    Callback = function()
+        local target = game:GetService("Players"):FindFirstChild(selectedPlr)
+        if player.Character and player.Character:FindFirstChild("HumanoidRootPart") and target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then 
+            player.Character.HumanoidRootPart.CFrame = target.Character.HumanoidRootPart.CFrame 
+        end
+    end
+})
+
+Tabs.Misc:AddParagraph({ Title = "Safety & Character Mods", Content = "Character and movement modifications" })
+
+-- [[ ANTI ADMIN TOGGLE ADDED HERE ]] --
+local antiAdminLoaded = false
+Tabs.Misc:AddToggle("AntiAdminToggle", {Title = "Anti Admin/Mod (Kick)", Default = false}):OnChanged(function(v)
+    if v and not antiAdminLoaded then
+        antiAdminLoaded = true
+        task.spawn(function()
+            pcall(function()
+                loadstring(game:HttpGet("https://pastebin.com/raw/fuDuZziN"))()
+            end)
+        end)
+    elseif not v and antiAdminLoaded then
+        Fluent:Notify({
+            Title = "Notice",
+            Content = "Anti Admin script is already loaded and active.",
+            Duration = 3
+        })
+    end
+end)
+
+local noclip = false
+RunService.Stepped:Connect(function()
+    if noclip and player.Character then
+        for _, v in pairs(player.Character:GetDescendants()) do if v:IsA("BasePart") then v.CanCollide = false end end
+    end
+end)
+Tabs.Misc:AddToggle("NC", {Title = "Noclip", Default = false}):OnChanged(function(v) noclip = v end)
+
+local infJump = false
+game:GetService("UserInputService").JumpRequest:Connect(function()
+    if infJump and player.Character then player.Character.Humanoid:ChangeState("Jumping") end
+end)
+Tabs.Misc:AddToggle("IJ", {Title = "Infinite Jump", Default = false}):OnChanged(function(v) infJump = v end)
+
+local VirtualUser = game:GetService("VirtualUser")
+local antiAfk = false
+local afkConnection = nil
+
+Tabs.Misc:AddToggle("AntiAFK", {Title = "Anti AFK", Default = false}):OnChanged(function(v)
+    antiAfk = v
+    if antiAfk then
+        if not afkConnection then
+            afkConnection = player.Idled:Connect(function()
+                VirtualUser:CaptureController()
+                VirtualUser:ClickButton2(Vector2.new())
+            end)
+        end
+    else
+        if afkConnection then
+            afkConnection:Disconnect()
+            afkConnection = nil
+        end
+    end
+end)
+
+Tabs.Misc:AddButton({
+    Title = "Drop Item",
+    Callback = function()
+        if player.Character and player.Character:FindFirstChildOfClass("Tool") then
+            player.Character:FindFirstChildOfClass("Tool").Parent = workspace
+        end
+    end
+})
+
+Tabs.Server:AddParagraph({ Title = "Server Management", Content = "Current Job ID:\n" .. tostring(game.JobId) })
+
+Tabs.Server:AddButton({
+    Title = "Copy Current Job ID",
+    Callback = function()
+        if setclipboard then
+            setclipboard(tostring(game.JobId))
+            Fluent:Notify({Title = "Copied!", Content = "Job ID copied to clipboard.", Duration = 3})
+        else
+            Fluent:Notify({Title = "Error", Content = "Executor doesn't support setclipboard.", Duration = 3})
+        end
+    end
+})
+
+local targetJobId = ""
+Tabs.Server:AddInput("InputJobId", {
+    Title = "Enter Job ID",
+    Default = "",
+    Placeholder = "Paste Job ID here...",
+    Numeric = false,
+    Finished = false,
+    Callback = function(Value)
+        targetJobId = Value
+    end
+})
+
+Tabs.Server:AddButton({
+    Title = "Join Server",
+    Callback = function()
+        if targetJobId ~= "" then
+            Fluent:Notify({Title = "Teleporting...", Content = "Joining target server.", Duration = 5})
+            pcall(function()
+                TeleportService:TeleportToPlaceInstance(game.PlaceId, targetJobId, player)
+            end)
+        else
+            Fluent:Notify({Title = "Error", Content = "Please enter a Job ID first.", Duration = 3})
+        end
+    end
+})
+
+Window:SelectTab(1)
+Fluent:Notify({
+    Title = "Mon ver.Paid",
+    Content = "Welcome! (Paid Version)",
+    Duration = 5
+})
