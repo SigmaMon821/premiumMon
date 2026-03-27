@@ -1,4 +1,4 @@
-Local player = game.Players.LocalPlayer 
+local player = game.Players.LocalPlayer 
 
 local hwid = (gethwid and gethwid()) or game:GetService("RbxAnalyticsService"):GetClientId()
 local whitelist_url = "https://pastebin.com/raw/VYuKUsTh"
