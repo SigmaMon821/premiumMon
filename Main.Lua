@@ -1,4 +1,4 @@
-local player = game.Players.LocalPlayer 
+Local player = game.Players.LocalPlayer 
 
 local hwid = (gethwid and gethwid()) or game:GetService("RbxAnalyticsService"):GetClientId()
 local whitelist_url = "https://pastebin.com/raw/VYuKUsTh"
@@ -11,10 +11,10 @@ if not success or type(whitelist) ~= "table" or not whitelist[hwid] then
     if setclipboard then
         pcall(function() setclipboard(hwid) end)
     end
-    player:Kick("\n❌ ไม่พบสิทธิ์การใช้งาน (Paid Version)\n\n" ..
-                "รหัสเครื่องของคุณคือ:\n" .. hwid .. "\n\n" ..
-                "(ระบบได้คัดลอกรหัสนี้ไว้ให้แล้ว สามารถกดวางในแชทได้เลย)\n\n" ..
-                "ติดต่อ FB: ม่อนพ่อพวกมึง\n")
+    player:Kick("\n❌ Unauthorized access (Paid Version)\n\n" ..
+                "Your Hardware ID is:\n" .. hwid .. "\n\n" ..
+                "(The system has already copied this ID, you can paste it in the chat)\n\n" ..
+                "Dm MonPhopuakMung \n")
     return 
 end
 
