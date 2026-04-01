@@ -1,23 +1,5 @@
 local player = game.Players.LocalPlayer 
 
-local hwid = (gethwid and gethwid()) or game:GetService("RbxAnalyticsService"):GetClientId()
-local whitelist_url = "https://pastebin.com/raw/VYuKUsTh"
-
-local success, whitelist = pcall(function()
-    return loadstring(game:HttpGet(whitelist_url))()
-end)
-
-if not success or type(whitelist) ~= "table" or not whitelist[hwid] then
-    if setclipboard then
-        pcall(function() setclipboard(hwid) end)
-    end
-    player:Kick("\n❌ Unauthorized access (Paid Version)\n\n" ..
-                "Your Hardware ID is:\n" .. hwid .. "\n\n" ..
-                "(The system has already copied this ID, you can paste it in the chat)\n\n" ..
-                "Dm MonPhopuakMung \n")
-    return 
-end
-
 local safePos = CFrame.new(-6.88, 200004.47, 194.75)
 
 local afkPlatformName = "AFKFishingPlatform"
