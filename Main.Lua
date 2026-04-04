@@ -486,9 +486,6 @@ local function LoadUI()
     end)
 end
 
--- =========================================================
--- 🚀 Auto-Login Check Sequence
--- =========================================================
 local HWID = game:GetService("RbxAnalyticsService"):GetClientId()
 local req = (syn and syn.request) or request or http_request or (http and http.request)
 
