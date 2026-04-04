@@ -340,9 +340,6 @@ local function LoadMainScript()
     Fluent:Notify({Title = "Mon ver.Paid", Content = "Welcome! (Paid Version)", Duration = 5})
 end
 
--- =========================================================
--- 🖥️ UI Load Function (Loads only if Auto-Login fails)
--- =========================================================
 local function LoadUI()
     local ScreenGui = Instance.new("ScreenGui")
     local KeySystem = Instance.new("Frame")
