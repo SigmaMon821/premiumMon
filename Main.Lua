@@ -103,7 +103,7 @@ local function LoadMainScript()
                 local userFolder = workspace.UserData:FindFirstChild("User_" .. tostring(player.UserId))
                 local remoteEvent = userFolder and userFolder:FindFirstChild("III")
                 if remoteEvent then
-                    while autoRemoteKill do remoteEvent:FireServer(unpack(hakiArgs)) task.wait(1) end
+                    while autoRemoteKill do remoteEvent:FireServer(unpack(hakiArgs)) task.wait(0.75) end
                 else
                     Fluent:Notify({Title = "Error", Content = "UserData or RemoteEvent 'III' not found", Duration = 3})
                 end
