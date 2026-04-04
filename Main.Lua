@@ -5,9 +5,6 @@ local nameofthescript = "YT : MonPhopuakMung 2.0 (Paid)"
 local whoisitmadeby = "Mon"
 local thenoteofthekey = "" 
 
--- =========================================================
--- 📦 Main Script Function (Loads if key or HWID is valid)
--- =========================================================
 local function LoadMainScript()
     local player = game.Players.LocalPlayer 
     local safePos = CFrame.new(-6.88, 200004.47, 194.75)
