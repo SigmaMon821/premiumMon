@@ -1,6 +1,4 @@
--- =========================================================
--- 🔒 Key System API with Auto-Login
--- =========================================================
+
 local ApiUrl = "https://script.google.com/macros/s/AKfycbxLXa65hXwaEaq5YyvDM7MtEhbz_3PGJnxrvMHfJMEHau5rkbboclS5EF-XKZrRATUCXA/exec"
 
 local nameofthescript = "YT : MonPhopuakMung 2.0 (Paid)"
