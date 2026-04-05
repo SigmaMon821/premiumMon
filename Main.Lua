@@ -37,7 +37,7 @@ local function LoadMainScript()
         Size = UDim2.fromOffset(580, 360),
         Acrylic = false, 
         Theme = "Dark",
-        MinimizeKey = Enum.KeyCode.LeftControl
+        MinimizeKey = Enum.KeyCode.LeftAlt
     })
 
     local ToggleButton = Instance.new("ScreenGui", game.CoreGui)
