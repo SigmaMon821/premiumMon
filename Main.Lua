@@ -96,7 +96,7 @@ local function LoadMainScript()
     local autoRemoteKill = false
 local hakiArgs = {[1] = "On", [2] = 2}
 
-Tabs.Main:AddToggle("AutoRemoteKill", {Title = "Auto Farm Haki (OP)", Default = false}):OnChanged(function(v)
+Tabs.Main:AddToggle("AutoRemoteKill", {Title = "Auto Farm Haki maybe ban ", Default = false}):OnChanged(function(v)
     autoRemoteKill = v
     if autoRemoteKill then
         task.spawn(function()
