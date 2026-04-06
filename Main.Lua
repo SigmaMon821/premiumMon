@@ -94,22 +94,27 @@ local function LoadMainScript()
     end)
 
     local autoRemoteKill = false
-    local hakiArgs = {[1] = "On", [2] = 2}
+local hakiArgs = {[1] = "On", [2] = 2}
 
-    Tabs.Main:AddToggle("AutoRemoteKill", {Title = "Auto Farm Haki (OP)", Default = false}):OnChanged(function(v)
-        autoRemoteKill = v
-        if autoRemoteKill then
-            task.spawn(function()
-                local userFolder = workspace.UserData:FindFirstChild("User_" .. tostring(player.UserId))
-                local remoteEvent = userFolder and userFolder:FindFirstChild("III")
-                if remoteEvent then
-                    while autoRemoteKill do remoteEvent:FireServer(unpack(hakiArgs)) task.wait(0.95) end
-                else
-                    Fluent:Notify({Title = "Error", Content = "UserData or RemoteEvent 'III' not found", Duration = 3})
+Tabs.Main:AddToggle("AutoRemoteKill", {Title = "Auto Farm Haki (OP)", Default = false}):OnChanged(function(v)
+    autoRemoteKill = v
+    if autoRemoteKill then
+        task.spawn(function()
+            local userFolder = workspace.UserData:FindFirstChild("User_" .. tostring(player.UserId))
+            local remoteEvent = userFolder and userFolder:FindFirstChild("III")
+            
+            if remoteEvent then
+                while autoRemoteKill do 
+                    remoteEvent:FireServer(unpack(hakiArgs)) 
+                    local randomDelay = math.random(150, 300) / 100 
+                    task.wait(randomDelay) 
                 end
-            end)
-        end
-    end)
+            else
+                Fluent:Notify({Title = "Error", Content = "UserData or RemoteEvent 'III' not found", Duration = 3})
+            end
+        end)
+    end
+end)
 
     local autoSam = false
     Tabs.Main:AddToggle("AutoSam", {Title = "Auto Sam", Default = false}):OnChanged(function(v)
