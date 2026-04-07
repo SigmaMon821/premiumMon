@@ -312,8 +312,102 @@ local function LoadMainScript()
             end
         end
     end)
+-- โยนของ
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local selectedItem = nil
 
-    Tabs.Misc:AddButton({Title = "Drop Item", Callback = function() if player.Character and player.Character:FindFirstChildOfClass("Tool") then player.Character:FindFirstChildOfClass("Tool").Parent = workspace end end})
+local function getInventoryItems()
+    local items = {}
+    local seen = {}
+
+    if player:FindFirstChild("Backpack") then
+        for _, item in ipairs(player.Backpack:GetChildren()) do
+            if item:IsA("Tool") and not seen[item.Name] then
+                table.insert(items, item.Name)
+                seen[item.Name] = true
+            end
+        end
+    end
+
+    if player.Character then
+        for _, item in ipairs(player.Character:GetChildren()) do
+            if item:IsA("Tool") and not seen[item.Name] then
+                table.insert(items, item.Name)
+                seen[item.Name] = true
+            end
+        end
+    end
+
+    return items
+end
+
+local ItemDropdown = Tabs.Misc:AddDropdown("ItemDropdown", {
+    Title = "Select Item to Drop",
+    Description = "",
+    Values = getInventoryItems(),
+    Multi = false,
+    Default = nil,
+})
+
+ItemDropdown:OnChanged(function(Value)
+    selectedItem = Value
+end)
+
+local function updateDropdown()
+    ItemDropdown:SetValues(getInventoryItems())
+end
+
+if player:FindFirstChild("Backpack") then
+    player.Backpack.ChildAdded:Connect(updateDropdown)
+    player.Backpack.ChildRemoved:Connect(updateDropdown)
+end
+
+player.CharacterAdded:Connect(function(char)
+    char.ChildAdded:Connect(updateDropdown)
+    char.ChildRemoved:Connect(updateDropdown)
+    
+    local backpack = player:WaitForChild("Backpack")
+    backpack.ChildAdded:Connect(updateDropdown)
+    backpack.ChildRemoved:Connect(updateDropdown)
+end)
+
+if player.Character then
+    player.Character.ChildAdded:Connect(updateDropdown)
+    player.Character.ChildRemoved:Connect(updateDropdown)
+end
+
+Tabs.Misc:AddButton({
+    Title = "Drop All Selected Items",
+    Description = "Equips items one by one and drops them fast",
+    Callback = function()
+        if not selectedItem then return end
+        
+        local char = player.Character
+        if not char then return end
+        
+        local humanoid = char:FindFirstChildOfClass("Humanoid")
+        if not humanoid then return end
+
+        local currentTool = char:FindFirstChildOfClass("Tool")
+        if currentTool and currentTool.Name == selectedItem and currentTool.CanBeDropped then
+            currentTool.Parent = workspace
+        end
+
+        local backpack = player:FindFirstChild("Backpack")
+        if backpack then
+            for _, item in ipairs(backpack:GetChildren()) do
+                if item:IsA("Tool") and item.Name == selectedItem and item.CanBeDropped then
+                    humanoid:EquipTool(item)
+                    task.wait(0.05)
+                    item.Parent = workspace
+                end
+            end
+        end
+    end
+})
+-- จบ
+
     Tabs.Server:AddButton({Title = "Copy Current Job ID", Callback = function() if setclipboard then setclipboard(tostring(game.JobId)) Fluent:Notify({Title = "Copied!", Content = "Job ID copied to clipboard.", Duration = 3}) else Fluent:Notify({Title = "Error", Content = "Executor doesn't support setclipboard.", Duration = 3}) end end})
 
     local targetJobId = ""
