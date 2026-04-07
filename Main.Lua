@@ -208,8 +208,119 @@ local function LoadMainScript()
             end
         end) end
     end)
+local selectedSmelt = "Cave Diamond" 
+local isAutoSmeltOn = false
+local smeltThread = nil
+local smeltNoclipConnection = nil
 
-    Tabs.Main:AddButton({Title = "Auto Smelt", Callback = function() pcall(function() loadstring(game:HttpGet("https://pastebin.com/raw/6yBSTgmm"))() end) end})
+local function enableSmeltNoclip()
+    if smeltNoclipConnection then return end
+    smeltNoclipConnection = RunService.Stepped:Connect(function()
+        local char = player.Character
+        if char then
+            for _, part in pairs(char:GetDescendants()) do
+                if part:IsA("BasePart") and part.CanCollide then
+                    part.CanCollide = false
+                end
+            end
+        end
+    end)
+end
+
+local function disableSmeltNoclip()
+    if smeltNoclipConnection then
+        smeltNoclipConnection:Disconnect()
+        smeltNoclipConnection = nil
+    end
+end
+
+local function updateSmeltNoclip()
+    if isAutoSmeltOn then
+        if selectedSmelt == "Vokun" then
+            disableSmeltNoclip()
+        else
+            enableSmeltNoclip()
+        end
+    else
+        disableSmeltNoclip()
+    end
+end
+
+local function loopSmelt()
+    local char = player.Character
+    local rootPart = char and char:FindFirstChild("HumanoidRootPart")
+    if rootPart then
+        if selectedSmelt == "Cave Diamond" then
+            rootPart.CFrame = CFrame.new(2211.09, 216.00, -632.65)
+        elseif selectedSmelt == "Boss Gunsling" then
+            rootPart.CFrame = CFrame.new(-1107.25, 218.00, 1595.78)
+        elseif selectedSmelt == "Vokun" then
+            rootPart.CFrame = CFrame.new(4570.93, 217.40, 5164.01)
+        end
+        task.wait(0.5)
+    end
+
+    while isAutoSmeltOn do
+        pcall(function()
+            local char = player.Character
+            if char and char:FindFirstChild("Powers") and char.Powers:FindFirstChild("Smelt") then
+                local remote = char.Powers.Smelt:FindFirstChild("RemoteEvent")
+                if not remote then return end
+
+                if selectedSmelt == "Cave Diamond" then
+                    local targetStone = workspace:FindFirstChild("IslandMountain") and workspace.IslandMountain:FindFirstChild("Stone") and workspace.IslandMountain.Stone:FindFirstChild("Stone")
+                    if targetStone then
+                        remote:FireServer("SmeltPower3", "Attempt", CFrame.new(2207, 217.178, -632.607) * CFrame.Angles(-2.142, 1.216, 2.171), targetStone)
+                    end
+                elseif selectedSmelt == "Boss Gunsling" then
+                    local targetStone = workspace:FindFirstChild("IslandCaver") and workspace.IslandCaver:FindFirstChild("Stones") and workspace.IslandCaver.Stones:FindFirstChild("Stone")
+                    if targetStone then
+                        remote:FireServer("SmeltPower3", "Attempt", CFrame.new(-958.5, 218.592, 1702.979) * CFrame.Angles(-3.114, -0.953, -3.119), targetStone)
+                    end
+                elseif selectedSmelt == "Vokun" then
+                    local targetField = workspace:FindFirstChild("Enemies") and workspace.Enemies:FindFirstChild("Lv2000 Vokun") and workspace.Enemies["Lv2000 Vokun"]:FindFirstChild("VokunField") and workspace.Enemies["Lv2000 Vokun"].VokunField:FindFirstChild("VokunField") and workspace.Enemies["Lv2000 Vokun"].VokunField.VokunField:FindFirstChild("Field")
+                    if targetField then
+                        remote:FireServer("SmeltPower3", "Attempt", CFrame.new(4571.593, 220.495, 5181.448) * CFrame.Angles(3.053, -0.040, 3.138), targetField)
+                    end
+                end
+            end
+        end)
+        task.wait(3) 
+    end
+end
+
+local SmeltDropdown = Tabs.Main:AddDropdown("SmeltSelect", {
+    Title = "Select Smelt Target",
+    Values = {"Cave Diamond", "Boss Gunsling", "Vokun"},
+    Multi = false,
+    Default = 1,
+})
+
+SmeltDropdown:OnChanged(function(Value)
+    selectedSmelt = Value
+    if isAutoSmeltOn then
+        updateSmeltNoclip()
+        if smeltThread then task.cancel(smeltThread) end
+        smeltThread = task.spawn(loopSmelt)
+    end
+end)
+
+local SmeltToggle = Tabs.Main:AddToggle("AutoSmeltToggle", {
+    Title = "Auto Smelt",
+    Default = false
+})
+
+SmeltToggle:OnChanged(function(Value)
+    isAutoSmeltOn = Value
+    updateSmeltNoclip()
+    if isAutoSmeltOn then
+        if smeltThread then task.cancel(smeltThread) end
+        smeltThread = task.spawn(loopSmelt)
+    else
+        if smeltThread then task.cancel(smeltThread) end
+    end
+end)
+
     Tabs.Main:AddButton({Title = "Auto Fish MB", Callback = function() pcall(function() loadstring(game:HttpGet("https://pastebin.com/raw/Fy54yU3P"))() end) end})
     Tabs.Main:AddButton({Title = "Auto Fish PC", Callback = function() pcall(function() loadstring(game:HttpGet("https://pastebin.com/raw/Vx68tpY4"))() end) end})
 
