@@ -379,7 +379,7 @@ end
 
 Tabs.Misc:AddButton({
     Title = "Drop All Selected Items",
-    Description = "Equips items one by one and drops them fast",
+    Description = "Drop All ",
     Callback = function()
         if not selectedItem then return end
         
