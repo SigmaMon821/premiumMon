@@ -127,12 +127,14 @@ local function LoadMainScript()
     end)
 
     local wantedItems = {
-        ["Rare Box"]=true, ["Ultra Rare Box"]=true, ["Chilly Fruit"]=true, ["Vampire Fruit"]=true,
-        ["Sand Fruit"]=true, ["Plasma Fruit"]=true, ["Snow Fruit"]=true, ["Light Fruit"]=true,
-        ["Candy Fruit"]=true, ["Quake Fruit"]=true, ["Blood Fruit"]=true, ["Ope Fruit"]=true,
-        ["Gum Fruit"]=true, ["Dark Fruit"]=true, ["Rumble Fruit"]=true, ["Gravity Fruit"]=true,
-        ["Venom Fruit"]=true, ["Magma Fruit"]=true, ["Gas Fruit"]=true, ["Hollow Fruit"]=true, ["Flare Fruit"]=true, ["Luck Fruit"]=true, ["Alice Fruit"]=true, 
-    }
+    ["Rare Box"] = true, ["Ultra Rare Box"] = true, ["Chilly Fruit"] = true, ["Vampire Fruit"] = true,
+    ["Sand Fruit"] = true, ["Plasma Fruit"] = true, ["Snow Fruit"] = true, ["Light Fruit"] = true,
+    ["Candy Fruit"] = true, ["Quake Fruit"] = true, ["Blood Fruit"] = true, ["Ope Fruit"] = true,
+    ["Gum Fruit"] = true, ["Dark Fruit"] = true, ["Rumble Fruit"] = true, ["Gravity Fruit"] = true,
+    ["Venom Fruit"] = true, ["Magma Fruit"] = true, ["Gas Fruit"] = true, ["Hollow Fruit"] = true, 
+    ["Flare Fruit"] = true, ["Luck Fruit"] = true, ["Alice Fruit"] = true
+}
+
 
     local itemESP = false
     local function updateItemESP(plr)
