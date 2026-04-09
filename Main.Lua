@@ -327,7 +327,7 @@ end)
     Tabs.Main:AddButton({Title = "Auto Fish PC", Callback = function() pcall(function() loadstring(game:HttpGet("https://pastebin.com/raw/Vx68tpY4"))() end) end})
 
     local tpLocations = {
-        ["AFK FISHING"] = CFrame.new(-5700.45, 222.97, -14696.02),
+                ["AFK FISHING"] = CFrame.new(-5700.45, 222.97, -14696.02),
         ["Castle"] = safePos * CFrame.new(0, 2, 0),
         ["Sam (Main)"] = CFrame.new(-1281.53, 215, -1339.01),
         ["Bob & Crab"] = CFrame.new(25.95, 221, -95.08),
@@ -341,7 +341,15 @@ end)
         ["Desert"] = CFrame.new(1078.03, 242.2, -3333.11),
         ["Forest"] = CFrame.new(-6042.84, 399, -10.66),
         ["Fish Spot"] = CFrame.new(1767.62, 215, 814.59),
-        ["Merlin"] = CFrame.new(-1700.5365, 215.999985, -328.792603, -0.801688135, 1.01198889e-08, -0.597742558, -7.09675385e-09, 1, 2.6448296e-08, 0.597742558, 2.5445317e-08, -0.801688135)
+        ["Merlin"] = CFrame.new(-1700.5365, 215.999985, -328.792603, -0.801688135, 1.01198889e-08, -0.597742558, -7.09675385e-09, 1, 2.6448296e-08, 0.597742558, 2.5445317e-08, -0.801688135),
+        ["Large island"] = CFrame.new(-6474.30, 276.00, 4519.80),
+        ["Marine Ford"] = CFrame.new(-3134.41, 557.56, -4090.88),
+        ["Gunsling island"] = CFrame.new(-1076.26, 361.00, 1702.01),
+        ["Snow Island"] = CFrame.new(-1899.79, 225.00, 3292.03),
+        ["IslandTREEABIGHOUSE"] = CFrame.new(1107.45, 217.20, 3353.74),
+        ["IslandCrescent"] = CFrame.new(3185.51, 217.00, 1526.23),
+        ["Island12"] = CFrame.new(4832.99, 570.00, -7127.42)
+
     }
 
     for name, cf in pairs(tpLocations) do
