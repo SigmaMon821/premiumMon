@@ -9,11 +9,9 @@ local function LoadMainScript()
     local plrs = game:GetService("Players")
     local rs = game:GetService("RunService")
     local ts = game:GetService("TeleportService")
-    local vim = game:GetService("VirtualInputManager")
+    local vu = game:GetService("VirtualUser")
     local uis = game:GetService("UserInputService")
     local plr = plrs.LocalPlayer
-    local mouse = plr:GetMouse()
-    local lastPos = Vector3.new()
 
     local safePos = CFrame.new(-6.88, 200004.47, 194.75)
     local afkPlatformName = "AFKFishingPlatform"
@@ -34,23 +32,6 @@ local function LoadMainScript()
     if game.CoreGui:FindFirstChild("FluentToggle") then game.CoreGui.FluentToggle:Destroy() end
 
     local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
-
-    uis.InputChanged:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement then
-            lastPos = mouse.Hit.Position
-        end
-    end)
-
-    uis.InputBegan:Connect(function(input, gpe)
-        if not gpe and input.UserInputType == Enum.UserInputType.Touch then
-            local ray = workspace.CurrentCamera:ScreenPointToRay(input.Position.X, input.Position.Y)
-            local params = RaycastParams.new()
-            params.FilterType = Enum.RaycastFilterType.Exclude
-            if plr.Character then params.FilterDescendantsInstances = {plr.Character} end
-            local result = workspace:Raycast(ray.Origin, ray.Direction * 1000, params)
-            if result then lastPos = result.Position end
-        end
-    end)
 
     local Window = Fluent:CreateWindow({
         Title = "YT : MonPhopuakMung 2.0",
@@ -110,20 +91,16 @@ local function LoadMainScript()
             for _, k in ipairs(keys) do
                 if active[k] then
                     pcall(function()
-                        local char = plr.Character
-                        local hrp = char and char:FindFirstChild("HumanoidRootPart")
-                        if hrp and lastPos ~= Vector3.new() then
-                            hrp.CFrame = CFrame.new(hrp.Position, Vector3.new(lastPos.X, hrp.Position.Y, lastPos.Z))
-                        end
-                        vim:SendKeyEvent(true, Enum.KeyCode[k], false, game)
-                        task.wait(0.05)
-                        vim:SendKeyEvent(false, Enum.KeyCode[k], false, game)
+                        vu:CaptureController()
+                        vu:TypeKey(k:lower())
                     end)
                     task.wait(0.3)
                 end
             end
         end
     end)
+
+
 
     local autoClick = false
     Tabs.Main:AddToggle("AutoClick", {Title = "Auto Click", Default = false}):OnChanged(function(v)
