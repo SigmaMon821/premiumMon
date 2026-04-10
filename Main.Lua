@@ -46,7 +46,7 @@ local function LoadMainScript()
     local MainButton = Instance.new("TextButton", ToggleButton)
     MainButton.Size = UDim2.new(0, 50, 0, 50)
     MainButton.Position = UDim2.new(0.05, 0, 0.15, 0)
-    MainButton.Text = "๐งฉ"
+    MainButton.Text = "🍾"
     MainButton.TextSize = 30
     MainButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     MainButton.TextColor3 = Color3.new(1, 1, 1)
