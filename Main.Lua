@@ -412,11 +412,11 @@ Tabs.Misc:AddButton({
     Title = "Fly GUI V4",
     Callback = function()
         local success, err = pcall(function()
-            -- ใช้ตัว l พิมพ์เล็กทั้งหมด
+            
             loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fly-GUI-V4-196344"))()
         end)
         
-        -- ถ้าสคริปต์พังหรือลิงก์เสีย จะเด้งข้อความบอก
+        
         if not success then
             Fluent:Notify({Title = "โหลด Fly ไม่สำเร็จ", Content = tostring(err), Duration = 5})
         else
