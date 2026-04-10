@@ -408,6 +408,15 @@ end)
     local antiAfk = false
     local afkConnection = nil
 
+Tabs.Misc:AddButton({
+    Title = "Fly GUI ",
+    Callback = function()
+        pcall(function()
+            loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fly-GUI-V4-196344"))()
+        end)
+    end
+})
+
     Tabs.Misc:AddToggle("AntiAFK", {Title = "Anti AFK", Default = false}):OnChanged(function(v)
         antiAfk = v
         if antiAfk then
