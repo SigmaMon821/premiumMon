@@ -6,13 +6,7 @@ local whoisitmadeby = "Mon"
 local thenoteofthekey = "" 
 
 local function LoadMainScript()
-    local plrs = game:GetService("Players")
-    local rs = game:GetService("RunService")
-    local ts = game:GetService("TeleportService")
-    local vu = game:GetService("VirtualUser")
-    local uis = game:GetService("UserInputService")
-    local plr = plrs.LocalPlayer
-
+    local player = game.Players.LocalPlayer 
     local safePos = CFrame.new(-6.88, 200004.47, 194.75)
     local afkPlatformName = "AFKFishingPlatform"
     local afkCoords = Vector3.new(-5700.45, 216.97, -14696.02)
@@ -32,6 +26,9 @@ local function LoadMainScript()
     if game.CoreGui:FindFirstChild("FluentToggle") then game.CoreGui.FluentToggle:Destroy() end
 
     local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+    local Players = game:GetService("Players")
+    local RunService = game:GetService("RunService")
+    local TeleportService = game:GetService("TeleportService")
 
     local Window = Fluent:CreateWindow({
         Title = "YT : MonPhopuakMung 2.0",
@@ -46,11 +43,10 @@ local function LoadMainScript()
     local ToggleButton = Instance.new("ScreenGui", game.CoreGui)
     ToggleButton.Name = "FluentToggle"
     ToggleButton.ResetOnSpawn = false
- 
     local MainButton = Instance.new("TextButton", ToggleButton)
     MainButton.Size = UDim2.new(0, 50, 0, 50)
     MainButton.Position = UDim2.new(0.05, 0, 0.15, 0)
-    MainButton.Text = "🧩"
+    MainButton.Text = "๐งฉ"
     MainButton.TextSize = 30
     MainButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     MainButton.TextColor3 = Color3.new(1, 1, 1)
@@ -61,7 +57,7 @@ local function LoadMainScript()
 
     MainButton.MouseButton1Click:Connect(function()
         for _, gui in pairs(game.CoreGui:GetChildren()) do
-             if gui:IsA("ScreenGui") and gui:FindFirstChild("Frame") and gui.Name ~= "FluentToggle" then
+            if gui:IsA("ScreenGui") and gui:FindFirstChild("Frame") and gui.Name ~= "FluentToggle" then
                 gui.Enabled = not gui.Enabled
             end
         end
@@ -69,13 +65,11 @@ local function LoadMainScript()
 
     local Tabs = {
         Main = Window:AddTab({ Title = "Home", Icon = "home" }),
-        
         Teleport = Window:AddTab({ Title = "Teleport", Icon = "map-pin" }),
         Player = Window:AddTab({ Title = "Player", Icon = "user" }),
         Misc = Window:AddTab({ Title = "Misc", Icon = "settings" }),
         Server = Window:AddTab({ Title = "Server", Icon = "globe" })
     }
-
 
 
 
