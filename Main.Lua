@@ -419,6 +419,7 @@ rs.Heartbeat:Connect(function()
 end)
 
 
+
 rs.Stepped:Connect(function()
     if loopWs and plr.Character and plr.Character:FindFirstChild("Humanoid") then
         plr.Character.Humanoid.WalkSpeed = wsVal
