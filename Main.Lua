@@ -65,7 +65,7 @@ local function LoadMainScript()
         end
     end)
 
-    local Tabs = {
+        local Tabs = {
         Main = Window:AddTab({ Title = "Home", Icon = "home" }),
         Skill = Window:AddTab({ Title = "Auto Skill", Icon = "swords" }),
         Teleport = Window:AddTab({ Title = "Teleport", Icon = "map-pin" }),
@@ -73,6 +73,31 @@ local function LoadMainScript()
         Misc = Window:AddTab({ Title = "Misc", Icon = "settings" }),
         Server = Window:AddTab({ Title = "Server", Icon = "globe" })
     }
+
+       local keys = {"Z", "X", "C", "V", "B", "N", "F", "G", "H", "J", "K", "L"}
+    local active = {}
+
+    for _, key in ipairs(keys) do
+        active[key] = false
+        Tabs.Skill:AddToggle("Auto" .. key, {Title = "Auto " .. key, Default = false}):OnChanged(function(value)
+            active[key] = value
+        end)
+    end
+
+    task.spawn(function()
+        while task.wait(0.4) do
+            for _, key in ipairs(keys) do
+                if active[key] then
+                    pcall(function()
+                        VirtualUser:CaptureController()
+                        VirtualUser:TypeKey(key:lower())
+                    end)
+                    task.wait(0.3)
+                end
+            end
+        end
+    end)
+
 
 
 
