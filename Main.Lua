@@ -646,7 +646,7 @@ local function LoadUI()
 
         if inputKey == "" or inputKey == "Enter Key" then 
             TextButton.Text = "Please Enter Key!"
-            task.wait(2)
+            task.wait(1)
             TextButton.Text = "Check Key"
             return 
         end
@@ -683,7 +683,7 @@ local function LoadUI()
         end
 
         if TextButton.Text ~= "Correct Key!" then
-            task.wait(2)
+            task.wait(1)
             TextButton.Text = "Check Key"
         end
     end)
