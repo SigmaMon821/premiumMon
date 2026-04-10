@@ -409,7 +409,7 @@ end)
     local afkConnection = nil
 
 Tabs.Misc:AddButton({
-    Title = "Fly GUI V4",
+    Title = "Fly GUI ",
     Callback = function()
         pcall(function()
             loadstring(game:HttpGet("https://pastebin.com/raw/GWxt3bBb"))()
