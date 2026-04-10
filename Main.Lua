@@ -394,20 +394,30 @@ local rs = game:GetService("RunService")
 local loopWs = false
 local wsVal = 16
 
-Tabs.Misc:AddToggle("WalkSpeedToggle", {Title = "Walk speed", Default = false}):OnChanged(function(v)
+Tabs.Misc:AddToggle("WalkSpeedToggle", {Title = "Loop WalkSpeed", Default = false}):OnChanged(function(v)
     loopWs = v
+    if not loopWs and plr.Character and plr.Character:FindFirstChild("Humanoid") then
+        plr.Character.Humanoid.WalkSpeed = 16
+    end
 end)
 
-Tabs.Misc:AddSlider("WSSlider", {
-    Title = "Adjust WalkSpeed",
-    Default = 16,
-    Min = 16,
-    Max = 250,
-    Rounding = 1,
+Tabs.Misc:AddInput("WSInput", {
+    Title = "Set WalkSpeed",
+    Default = "16",
+    Placeholder = "Enter speed number...",
+    Numeric = true,
+    Finished = true,
     Callback = function(v)
-        wsVal = v
+        wsVal = tonumber(v) or 16
     end
 })
+
+rs.Heartbeat:Connect(function()
+    if loopWs and plr.Character and plr.Character:FindFirstChild("Humanoid") then
+        plr.Character.Humanoid.WalkSpeed = wsVal
+    end
+end)
+
 
 rs.Stepped:Connect(function()
     if loopWs and plr.Character and plr.Character:FindFirstChild("Humanoid") then
