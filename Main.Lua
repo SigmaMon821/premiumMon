@@ -388,16 +388,40 @@ end)
             end
         end
     })
+--หัวเผื่อแก้
 local plr = game:GetService("Players").LocalPlayer
 local rs = game:GetService("RunService")
 
 local loopWs = false
 local wsVal = 16
+local wsConnection
+
+local function hookHumanoid(character)
+    local humanoid = character:WaitForChild("Humanoid", 5)
+    if humanoid then
+        if wsConnection then wsConnection:Disconnect() end
+        
+        
+        wsConnection = humanoid:GetPropertyChangedSignal("WalkSpeed"):Connect(function()
+            if loopWs and humanoid.WalkSpeed ~= wsVal then
+                humanoid.WalkSpeed = wsVal
+            end
+        end)
+    end
+end
+
+plr.CharacterAdded:Connect(hookHumanoid)
+if plr.Character then hookHumanoid(plr.Character) end
 
 Tabs.Misc:AddToggle("WalkSpeedToggle", {Title = "Loop WalkSpeed", Default = false}):OnChanged(function(v)
     loopWs = v
-    if not loopWs and plr.Character and plr.Character:FindFirstChild("Humanoid") then
-        plr.Character.Humanoid.WalkSpeed = 16
+    local hum = plr.Character and plr.Character:FindFirstChild("Humanoid")
+    if hum then
+        if loopWs then
+            hum.WalkSpeed = wsVal
+        else
+            hum.WalkSpeed = 16 
+        end
     end
 end)
 
@@ -409,22 +433,22 @@ Tabs.Misc:AddInput("WSInput", {
     Finished = true,
     Callback = function(v)
         wsVal = tonumber(v) or 16
+        if loopWs then
+            local hum = plr.Character and plr.Character:FindFirstChild("Humanoid")
+            if hum then hum.WalkSpeed = wsVal end
+        end
     end
 })
 
-rs.Heartbeat:Connect(function()
-    if loopWs and plr.Character and plr.Character:FindFirstChild("Humanoid") then
-        plr.Character.Humanoid.WalkSpeed = wsVal
-    end
-end)
-
-
-
 rs.Stepped:Connect(function()
-    if loopWs and plr.Character and plr.Character:FindFirstChild("Humanoid") then
-        plr.Character.Humanoid.WalkSpeed = wsVal
+    if loopWs then
+        local hum = plr.Character and plr.Character:FindFirstChild("Humanoid")
+        if hum and hum.WalkSpeed ~= wsVal then
+            hum.WalkSpeed = wsVal
+        end
     end
 end)
+--ท้าย
 
     
     local noclip = false
