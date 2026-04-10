@@ -411,19 +411,14 @@ end)
 Tabs.Misc:AddButton({
     Title = "Fly GUI V4",
     Callback = function()
-        local success, err = pcall(function()
-            
-            loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fly-GUI-V4-196344"))()
+        pcall(function()
+            loadstring(game:HttpGet("https://pastebin.com/raw/GWxt3bBb"))()
         end)
-        
-        
-        if not success then
-            Fluent:Notify({Title = "โหลด Fly ไม่สำเร็จ", Content = tostring(err), Duration = 5})
-        else
-            Fluent:Notify({Title = "สำเร็จ", Content = "โหลด Fly GUI  เรียบร้อยแล้ว", Duration = 3})
-        end
     end
 })
+
+        
+  
 
 
     Tabs.Misc:AddToggle("AntiAFK", {Title = "Anti AFK", Default = false}):OnChanged(function(v)
