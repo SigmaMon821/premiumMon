@@ -6,7 +6,15 @@ local whoisitmadeby = "Mon"
 local thenoteofthekey = "" 
 
 local function LoadMainScript()
-    local player = game.Players.LocalPlayer 
+    local plrs = game:GetService("Players")
+    local rs = game:GetService("RunService")
+    local ts = game:GetService("TeleportService")
+    local vim = game:GetService("VirtualInputManager")
+    local uis = game:GetService("UserInputService")
+    local plr = plrs.LocalPlayer
+    local mouse = plr:GetMouse()
+    local lastPos = Vector3.new()
+
     local safePos = CFrame.new(-6.88, 200004.47, 194.75)
     local afkPlatformName = "AFKFishingPlatform"
     local afkCoords = Vector3.new(-5700.45, 216.97, -14696.02)
@@ -26,9 +34,23 @@ local function LoadMainScript()
     if game.CoreGui:FindFirstChild("FluentToggle") then game.CoreGui.FluentToggle:Destroy() end
 
     local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
-    local Players = game:GetService("Players")
-    local RunService = game:GetService("RunService")
-    local TeleportService = game:GetService("TeleportService")
+
+    uis.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement then
+            lastPos = mouse.Hit.Position
+        end
+    end)
+
+    uis.InputBegan:Connect(function(input, gpe)
+        if not gpe and input.UserInputType == Enum.UserInputType.Touch then
+            local ray = workspace.CurrentCamera:ScreenPointToRay(input.Position.X, input.Position.Y)
+            local params = RaycastParams.new()
+            params.FilterType = Enum.RaycastFilterType.Exclude
+            if plr.Character then params.FilterDescendantsInstances = {plr.Character} end
+            local result = workspace:Raycast(ray.Origin, ray.Direction * 1000, params)
+            if result then lastPos = result.Position end
+        end
+    end)
 
     local Window = Fluent:CreateWindow({
         Title = "YT : MonPhopuakMung 2.0",
@@ -43,6 +65,7 @@ local function LoadMainScript()
     local ToggleButton = Instance.new("ScreenGui", game.CoreGui)
     ToggleButton.Name = "FluentToggle"
     ToggleButton.ResetOnSpawn = false
+ 
     local MainButton = Instance.new("TextButton", ToggleButton)
     MainButton.Size = UDim2.new(0, 50, 0, 50)
     MainButton.Position = UDim2.new(0.05, 0, 0.15, 0)
@@ -57,7 +80,7 @@ local function LoadMainScript()
 
     MainButton.MouseButton1Click:Connect(function()
         for _, gui in pairs(game.CoreGui:GetChildren()) do
-            if gui:IsA("ScreenGui") and gui:FindFirstChild("Frame") and gui.Name ~= "FluentToggle" then
+             if gui:IsA("ScreenGui") and gui:FindFirstChild("Frame") and gui.Name ~= "FluentToggle" then
                 gui.Enabled = not gui.Enabled
             end
         end
@@ -65,11 +88,42 @@ local function LoadMainScript()
 
     local Tabs = {
         Main = Window:AddTab({ Title = "Home", Icon = "home" }),
+        Skill = Window:AddTab({ Title = "Auto Skill", Icon = "swords" }),
         Teleport = Window:AddTab({ Title = "Teleport", Icon = "map-pin" }),
         Player = Window:AddTab({ Title = "Player", Icon = "user" }),
         Misc = Window:AddTab({ Title = "Misc", Icon = "settings" }),
         Server = Window:AddTab({ Title = "Server", Icon = "globe" })
     }
+
+    local keys = {"Z", "X", "C", "V", "B", "N", "F", "G", "H", "J", "K", "L"}
+    local active = {}
+
+    for _, k in ipairs(keys) do
+        active[k] = false
+        Tabs.Skill:AddToggle("Auto" .. k, {Title = "Auto " .. k, Default = false}):OnChanged(function(v)
+            active[k] = v
+        end)
+    end
+
+    task.spawn(function()
+        while task.wait(0.4) do
+            for _, k in ipairs(keys) do
+                if active[k] then
+                    pcall(function()
+                        local char = plr.Character
+                        local hrp = char and char:FindFirstChild("HumanoidRootPart")
+                        if hrp and lastPos ~= Vector3.new() then
+                            hrp.CFrame = CFrame.new(hrp.Position, Vector3.new(lastPos.X, hrp.Position.Y, lastPos.Z))
+                        end
+                        vim:SendKeyEvent(true, Enum.KeyCode[k], false, game)
+                        task.wait(0.05)
+                        vim:SendKeyEvent(false, Enum.KeyCode[k], false, game)
+                    end)
+                    task.wait(0.3)
+                end
+            end
+        end
+    end)
 
     local autoClick = false
     Tabs.Main:AddToggle("AutoClick", {Title = "Auto Click", Default = false}):OnChanged(function(v)
