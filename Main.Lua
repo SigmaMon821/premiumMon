@@ -388,6 +388,32 @@ end)
             end
         end
     })
+local plr = game:GetService("Players").LocalPlayer
+local rs = game:GetService("RunService")
+
+local loopWs = false
+local wsVal = 16
+
+Tabs.Misc:AddToggle("WalkSpeedToggle", {Title = "Walk speed", Default = false}):OnChanged(function(v)
+    loopWs = v
+end)
+
+Tabs.Misc:AddSlider("WSSlider", {
+    Title = "Adjust WalkSpeed",
+    Default = 16,
+    Min = 16,
+    Max = 250,
+    Rounding = 1,
+    Callback = function(v)
+        wsVal = v
+    end
+})
+
+rs.Stepped:Connect(function()
+    if loopWs and plr.Character and plr.Character:FindFirstChild("Humanoid") then
+        plr.Character.Humanoid.WalkSpeed = wsVal
+    end
+end)
 
     
     local noclip = false
