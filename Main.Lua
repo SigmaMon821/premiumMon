@@ -67,7 +67,7 @@ local function LoadMainScript()
 
             local Tabs = {
         Main = Window:AddTab({ Title = "Home", Icon = "home" }),
-        Farm = Window:AddTab({ Title = "Auto Farm", Icon = "zap" }),
+        Farm = Window:AddTab({ Title = "Auto Farm", Icon = "hammer" }),
         Skill = Window:AddTab({ Title = "Auto Skill", Icon = "swords" }),
         Teleport = Window:AddTab({ Title = "Teleport", Icon = "map-pin" }),
         Player = Window:AddTab({ Title = "Player", Icon = "user" }),
