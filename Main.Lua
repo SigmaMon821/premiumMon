@@ -65,14 +65,16 @@ local function LoadMainScript()
         end
     end)
 
-        local Tabs = {
+            local Tabs = {
         Main = Window:AddTab({ Title = "Home", Icon = "home" }),
+        Farm = Window:AddTab({ Title = "Auto Farm", Icon = "zap" }),
         Skill = Window:AddTab({ Title = "Auto Skill", Icon = "swords" }),
         Teleport = Window:AddTab({ Title = "Teleport", Icon = "map-pin" }),
         Player = Window:AddTab({ Title = "Player", Icon = "user" }),
         Misc = Window:AddTab({ Title = "Misc", Icon = "settings" }),
         Server = Window:AddTab({ Title = "Server", Icon = "globe" })
     }
+
 
        local keys = {"Z", "X", "C", "V", "B", "N", "F", "G", "H", "J", "K", "L"}
     local active = {}
@@ -256,6 +258,80 @@ Tabs.Main:AddToggle("Auto Luck Spin", {Title = "Auto Skill x luck fruit", Defaul
     end)
 end)
 
+
+    Tabs.Main:AddButton({Title = "Auto Fish MB", Callback = function() pcall(function() loadstring(game:HttpGet("https://pastebin.com/raw/Fy54yU3P"))() end) end})
+    Tabs.Main:AddButton({Title = "Auto Fish PC", Callback = function() pcall(function() loadstring(game:HttpGet("https://pastebin.com/raw/Vx68tpY4"))() end) end})
+--เริ่มtab auto fram
+local chargeTime = 14
+local cooldownTime = 20
+local standCFrame = CFrame.new(-3133.87, 557.86, -4092.61)
+
+local targetPoints = {
+    Vector3.new(-2643.20, 402.59, -4465.90),
+    Vector3.new(-3492.67, 402.59, -4527.46),
+    Vector3.new(-3673.16, 401.91, -3814.21),
+    Vector3.new(-2605.10, 334.78, -3769.86)
+}
+
+_G.AutoGravitySkill = false
+local positionLock
+
+local function lockPlayerPosition()
+    if positionLock then positionLock:Disconnect() end
+    positionLock = RunService.Heartbeat:Connect(function()
+        if _G.AutoGravitySkill and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            player.Character.HumanoidRootPart.CFrame = standCFrame
+        elseif not _G.AutoGravitySkill then
+            if positionLock then 
+                positionLock:Disconnect() 
+                positionLock = nil
+            end
+        end
+    end)
+end
+
+Tabs.Farm:AddToggle("AutoSkillGravity", {
+    Title = "Auto Farm Gravity", 
+    Default = false,
+    Callback = function(state)
+        _G.AutoGravitySkill = state
+        
+        if state then
+            lockPlayerPosition()
+            
+            task.spawn(function()
+                local index = 1
+                while _G.AutoGravitySkill do
+                    local character = player.Character
+                    if character and character:FindFirstChild("Powers") and character.Powers:FindFirstChild("Gravity") then
+                        local remote = character.Powers.Gravity.RemoteEvent
+                        local targetPos = targetPoints[index]
+                        local targetCFrame = CFrame.new(targetPos)
+                        
+                        remote:FireServer("GravityPower12", "StartCharging")
+                        remote:FireServer("GravityPower12", "StartCharging", targetCFrame)
+                        
+                        task.wait(chargeTime)
+                        
+                        if _G.AutoGravitySkill then
+                            remote:FireServer("GravityPower12", "StopCharging", targetCFrame, nil, 300)
+                        end
+                        
+                        task.wait(cooldownTime)
+                        
+                        index = index + 1
+                        if index > #targetPoints then
+                            index = 1
+                        end
+                    else
+                        task.wait(1)
+                    end
+                end
+            end)
+        end
+    end
+})
+
 local selectedSmelt = "Cave Diamond" 
 local isAutoSmeltOn = false
 local smeltThread = nil
@@ -337,7 +413,7 @@ local function loopSmelt()
     end
 end
 
-local SmeltDropdown = Tabs.Main:AddDropdown("SmeltSelect", {
+local SmeltDropdown = Tabs.Farm:AddDropdown("SmeltSelect", {
     Title = "Select Smelt Target",
     Values = {"Cave Diamond", "Boss Gunsling", "Vokun"},
     Multi = false,
@@ -353,7 +429,7 @@ SmeltDropdown:OnChanged(function(Value)
     end
 end)
 
-local SmeltToggle = Tabs.Main:AddToggle("AutoSmeltToggle", {
+local SmeltToggle = Tabs.Farm:AddToggle("AutoSmeltToggle", {
     Title = "Auto Smelt",
     Default = false
 })
@@ -369,8 +445,7 @@ SmeltToggle:OnChanged(function(Value)
     end
 end)
 
-    Tabs.Main:AddButton({Title = "Auto Fish MB", Callback = function() pcall(function() loadstring(game:HttpGet("https://pastebin.com/raw/Fy54yU3P"))() end) end})
-    Tabs.Main:AddButton({Title = "Auto Fish PC", Callback = function() pcall(function() loadstring(game:HttpGet("https://pastebin.com/raw/Vx68tpY4"))() end) end})
+-----จบของ tab Auto Fram 
 
     local tpLocations = {
                 ["AFK FISHING"] = CFrame.new(-5700.45, 222.97, -14696.02),
