@@ -242,21 +242,7 @@ local function LoadMainScript()
             end
         end) end
     end)
-local autoLuck = false
-Tabs.Main:AddToggle("Auto Luck Spin", {Title = "Auto Skill x luck fruit", Default = false}):OnChanged(function(v)
-    autoLuck = v
-    task.spawn(function()
-        while autoLuck do
-            pcall(function()
-                local char = player.Character
-                if char and char:FindFirstChild("Powers") then
-                    char.Powers.Luck.RemoteEvent:FireServer("LuckPower2")
-                end
-            end)
-            task.wait(1.5)
-        end
-    end)
-end)
+
 
 
     Tabs.Main:AddButton({Title = "Auto Fish MB", Callback = function() pcall(function() loadstring(game:HttpGet("https://pastebin.com/raw/Fy54yU3P"))() end) end})
